@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}File Storage{% endblock %}
+{% block header %}
+  
+{% endblock %}
+
+{% block content %}
+<script type="text/javascript">
+  function openFileForm() {
+    alert("file upload dialog here");
+  }
+</script>
+
+  <div class="center-icon">
+    <button onclick="openFileForm()" style="border: none; cursor: pointer;">
+      <i class="material-icons md-96">add_circle_outline</i>
+    </button>
+    <span>Click to Upload</span>
+  </div>
+
+{% endblock %}

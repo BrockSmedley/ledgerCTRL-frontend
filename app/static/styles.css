@@ -213,3 +213,40 @@ _:-ms-input-placeholder, :root .demo-graph {
       -ms-flex-align: center;
           align-items: center;
 }
+
+.container-col {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  color: rgba(0, 0, 0, 0.54);
+  width:100%;
+}
+
+.container-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  color: rgba(0, 0, 0, 0.54);
+  height: 100%;
+}
+
+.center-icon {
+  width: 96px;
+  height: 96px;
+
+  position: absolute;
+  top:0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  margin: auto;
+}
+
+.material-icons.md-48 {
+  font-size: 48px;
+}
+
+.material-icons.md-96 {
+  font-size: 96px;
+}

@@ -1,6 +1,5 @@
 <!doctype html>
 <title>{% block title %}{% endblock %} - LedgerCTRL</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
 <head>
     <meta charset="utf-8">
@@ -33,7 +32,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.cyan-light_blue.min.css">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
         #view-source {
             position: fixed;
@@ -110,10 +109,8 @@
 
 
             <main class="mdl-layout__content mdl-color--grey-100">
-                <div class="mdl-grid demo-content">
-                    {% block content %}            
-                    {% endblock %}
-                </div>
+                {% block content %}            
+                {% endblock %}
             </main>
             <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
         </div>

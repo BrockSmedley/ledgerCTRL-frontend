@@ -5,5 +5,25 @@
 {% endblock %}
 
 {% block content %}
-  SUBMIT
+<div class="mdl-grid">
+  <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--10-col demo-content">
+    <div class="mdl-card__title">
+      <h2 class="mdl-card__title-text">Your files</h2>
+    </div>
+  </div>
+  <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--2-col mdl-grid">
+    <div class="mdl-card__title">
+      <h2 class="mdl-card__title-text">Upload a file</h2>
+    </div>
+<form action="{{API_HOST}}/v2/inventory" method="POST" and enctype="multipart/form-data">
+      <input type="file" id="upfile" name="upfile">
+      <input type="hidden" id="userId" name="userId" value="0xcb9cf80d9a6ea06646780d86fe764f0aff15757e">
+      <input type="hidden" id="inventoryItem" name="inventoryItem" value='{"name": "test"}'>
+      <div class="mdl-card__actions mdl-card--border">
+          <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" type="submit">
+            Upload a file
+          </button>
+        </div>
+    </form>
+</div>
 {% endblock %}
