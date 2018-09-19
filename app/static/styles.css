@@ -136,6 +136,18 @@ html, body {
       -ms-flex-align: stretch;
           align-items: stretch;
 }
+.login-box {
+  padding: 16px 32px;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+      flex-direction: column;
+  -webkit-align-items: center;
+    -ms-flex-align: center;
+      align-items: center;
+}
 /* TODO: Find a proper solution to have the graphs
  * not float around outside their container in IE10/11.
  * Using a browserhacks.com solution for now.
@@ -249,4 +261,11 @@ _:-ms-input-placeholder, :root .demo-graph {
 
 .material-icons.md-96 {
   font-size: 96px;
+}
+
+.disabled a {
+  color: currentColor;
+  cursor: not-allowed;
+  opacity: 0.5;
+  text-decoration: none;
 }
