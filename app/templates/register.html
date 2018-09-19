@@ -8,13 +8,20 @@
     <div class="mdl-layout-spacer" style="height: 200px;"></div>
     <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--4-col login-box">
         <form method="POST" action="/register">
-            <div class="mdl-textfield mdl-js-textfield">
-                <input class="mdl-textfield__input" type="email" id="email" name="email" placeholder="Email"></div>
-            <div class="mdl-textfield mdl-js-textfield">
-                <input class="mdl-textfield__input" type="password" id="password" name="password" placeholder="Password"></div>
-            <div>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="email" id="email" name="email">
+                <label class="mdl-textfield__label" for="password">Email...</label>
+            </div>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="password" id="password" name="password">
+                <label class="mdl-textfield__label" for="password">Password...</label>
+            </div>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="password" id="password2" name="password2">
+                <label class="mdl-textfield__label" for="password2">Password (again)...</label>
+            </div>
+            <div class="mdl-checkbox__input">
                 <label><input type="checkbox" id="agreeTerms" name="agreeTerms">I agree to the terms & conditions.</label></div>
-
             <div class="mdl-layout-spacer" style="height: 60px;"></div>
             <div style="display: flex; flex-direction: column; align-items: flex-end">
                 <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" type="submit" id="submitRegister"

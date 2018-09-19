@@ -49,7 +49,7 @@ def upload():
     uid = "0x4d409AB08C5B631A84dB907E4a916a7ea1375898"
     items = requests.get(API_HOST+"/v2/items/"+uid)
 
-    return render_template("upload.html", API_HOST=API_HOST, items=items.json(), title="Vault")
+    return render_template("upload.html", API_HOST=API_HOST, items=items.json(), title="Vault", current_user=current_user)
 
 
 # user endpoint; POST creates new user, PUT updates password
@@ -109,7 +109,7 @@ def register():
         else:
             return "Registration Failed"
     else:
-        return render_template("register.html", title="New Account")
+        return render_template("register.html", title="New Account", current_user=current_user)
 
 
 # helper function; account deletion

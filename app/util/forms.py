@@ -12,6 +12,7 @@ class UserForm(Form):
 class RegistrationForm(UserForm):
     agreeTerms = BooleanField('I accept the terms & conditions', [
         validators.InputRequired()])
+    password2 = StringField('password2', [validators.equal_to("password")])
 
 
 def validateUser(request):
