@@ -1,10 +1,14 @@
-from flask import Flask, render_template, flash, request, redirect, url_for
+from flask import Flask, render_template, flash, request, redirect, url_for, abort
 from werkzeug.utils import secure_filename
 import requests
 import json
 from cloudant.client import CouchDB
+from flask_login import LoginManager, login_user, logout_user, current_user
 
 from util import security, forms
+from util import user as User
+
+login_manager = LoginManager()
 
 COUCH_USER = "admin"
 COUCH_PASS = "Queef master 5000."
@@ -19,14 +23,24 @@ ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 app = Flask(__name__, static_url_path="", static_folder="static")
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SECRET_KEY'] = "Super Secret -- use DB or something"
+login_manager.init_app(app)
 
 API_HOST = "http://10.0.0.128:8088"
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    user = usersdb[user_id]
+    password = user['password']
+
+    u = User.User(user_id, password)
+    return u
 
 
 # homepage
 @app.route("/")
 def main():
-    return render_template("index.html")
+    return render_template("index.html", title="Dashboard", current_user=current_user)
 
 
 # file storage page
@@ -35,7 +49,7 @@ def upload():
     uid = "0x4d409AB08C5B631A84dB907E4a916a7ea1375898"
     items = requests.get(API_HOST+"/v2/items/"+uid)
 
-    return render_template("upload.html", API_HOST=API_HOST, items=items.json())
+    return render_template("upload.html", API_HOST=API_HOST, items=items.json(), title="Vault")
 
 
 # user endpoint; POST creates new user, PUT updates password
@@ -53,25 +67,37 @@ def user():
 
 
 # login endpoint
-@app.route("/login", methods=["POST"])
+@app.route("/login", methods=["POST", "GET"])
 def login():
-    if (not request.json):
-        return "PLEASE PROVIDE JSON"
+    if (request.method == "POST"):
+        # verify valid input syntax
+        user = forms.validateUser(request)
 
-    email = request.json['email']
-    password = request.json['password']
+        # confirmed good login syntax
+        if (user and checkCredentials(user.email, user.password)):
+            login_user(user)
 
-    if (checkCredentials(email, password)):
-        return("SUCCESS")
+            next = request.args.get('next')
+            if (not forms.is_safe_url(next)):
+                return abort(400)
+            return redirect(next or '/')
+        return render_template('login.html', title="Log In")
     else:
-        return("FAIL")
+        return render_template('login.html', title="Log In")
+
+
+# logout endpoint
+@app.route("/logout", methods=["GET"])
+def logout():
+    logout_user()
+    return redirect("/")
 
 
 # registration page
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if (request.method == "POST"):
-        user = forms.register(request)
+        user = forms.validateUser(request)
         if (user):
             # form is valid; sign 'em up
             result = signup(user.email, user.password)
@@ -82,7 +108,7 @@ def register():
         else:
             return "Registration Failed"
     else:
-        return render_template("register.html")
+        return render_template("register.html", title="New Account")
 
 
 # helper function; account deletion

@@ -51,7 +51,7 @@
         <div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
             <header class="demo-header mdl-layout__header mdl-color--grey-100 mdl-color-text--grey-600">
                 <div class="mdl-layout__header-row">
-                    <span class="mdl-layout-title">Dashboard</span>
+                    <span class="mdl-layout-title">{{ title }}</span>
                     <div class="mdl-layout-spacer"></div>
                     <span class="mdl-chip mdl-chip--contact">
                         <span class="mdl-chip__contact mdl-color--orange mdl-color-text--white">!</span>
@@ -81,15 +81,23 @@
                 <header class="demo-drawer-header">
                     <img src="images/user.jpg" class="demo-avatar">
                     <div class="demo-avatar-dropdown">
-                        <span>hello@example.com</span>
+                        <span>
+                            {% if current_user.is_authenticated %} {{ current_user.email }}
+                            {% else %} <a href="/login">Log in</a>
+                            {% endif %}
+                        </span>
                         <div class="mdl-layout-spacer"></div>
                         <button id="accbtn" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
                             <i class="material-icons" role="presentation">arrow_drop_down</i>
                             <span class="visuallyhidden">Accounts</span>
                         </button>
                         <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="accbtn">
-                            <li class="mdl-menu__item">Log In</li>
+                            {% if current_user.is_authenticated %}
+                            <a href="/logout"><li class="mdl-menu__item">Log Out</li></a>
+                            {% else %}
+                            <a href="/login"><li class="mdl-menu__item">Log In</li></a>
                             <a href="/register"><li class="mdl-menu__item">Register</li></a>
+                            {% endif %}
                         </ul>
                     </div>
                 </header>

@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
-{% block title %}Vault{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 {% block header %}
   
 {% endblock %}
 
 {% block content %}
 <div class="mdl-grid">
-  <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--8-col demo-content demo-graphs">
+  <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--8-col login-box">
     <div class="mdl-card__title">
       <h2 class="mdl-card__title-text">Your files</h2>
     </div>
@@ -30,7 +30,7 @@
       {% endfor %}
     </ul>
   </div>
-  <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--4-col mdl-grid">
+  <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--4-col login-box">
     <div class="mdl-card__title">
       <h2 class="mdl-card__title-text">Upload File</h2>
     </div>
@@ -38,11 +38,11 @@
       <input type="file" id="upfile" name="upfile">
       <input type="hidden" id="userId" name="userId" value="0x4d409AB08C5B631A84dB907E4a916a7ea1375898">
       <input type="hidden" id="inventoryItem" name="inventoryItem" value='{"name": "test"}'>
-      <div class="mdl-card__actions mdl-card--border">
+      
           <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" type="submit">
             Upload
           </button>
-        </div>
+        
     </form>
 </div>
 <script>

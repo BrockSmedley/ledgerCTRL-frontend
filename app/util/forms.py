@@ -1,4 +1,7 @@
 from wtforms import Form, BooleanField, StringField, validators
+from . import user as User
+from urllib.parse import urlparse, urljoin
+from flask import request, url_for, redirect
 
 
 class UserForm(Form):
@@ -11,23 +14,34 @@ class RegistrationForm(UserForm):
         validators.InputRequired()])
 
 
-def register(request):
-    form = RegistrationForm(request.form)
-    print("FORM:")
-    print(form)
+def validateUser(request):
+    form = UserForm(request.form)
     if (request.method == "POST" and form.validate()):
         email = form.email.data
         password = form.password.data
-        user = User(email, password)
+        user = User.User(email, password)
         return user
     else:
         return None
 
 
-class User():
-    email = ""
-    password = ""
+def is_safe_url(target):
+    ref_url = urlparse(request.host_url)
+    test_url = urlparse(urljoin(request.host_url, target))
+    return test_url.scheme in ('http', 'https') and \
+        ref_url.netloc == test_url.netloc
 
-    def __init__(self, email="", password=""):
-        self.email = email
-        self.password = password
+
+def get_redirect_target():
+    for target in request.values.get('next'), request.referrer:
+        if not target:
+            continue
+        if is_safe_url(target):
+            return target
+
+
+def redirect_back(endpoint, **values):
+    target = request.form['next']
+    if not target or not is_safe_url(target):
+        target = url_for(endpoint, **values)
+    return redirect(target)

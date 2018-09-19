@@ -1,0 +1,4 @@
+requests
+Cloudant
+WTForms
+flask-login

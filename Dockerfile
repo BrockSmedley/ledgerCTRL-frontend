@@ -1,5 +1,7 @@
 FROM tiangolo/uwsgi-nginx-flask:python3.6
 
-RUN pip install requests Cloudant WTForms
+ADD ./requirements.txt /app
+WORKDIR /app
+RUN pip install -r requirements.txt
 
 COPY ./app /app
