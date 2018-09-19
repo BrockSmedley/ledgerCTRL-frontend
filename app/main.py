@@ -3,7 +3,7 @@ from werkzeug.utils import secure_filename
 import requests
 import json
 from cloudant.client import CouchDB
-from flask_login import LoginManager, login_user, logout_user, current_user
+from flask_login import LoginManager, login_user, logout_user, current_user, login_required
 
 from util import security, forms
 from util import user as User
@@ -88,6 +88,7 @@ def login():
 
 # logout endpoint
 @app.route("/logout", methods=["GET"])
+@login_required
 def logout():
     logout_user()
     return redirect("/")
