@@ -12,11 +12,22 @@ class UserForm(Form):
 class RegistrationForm(UserForm):
     agreeTerms = BooleanField('I accept the terms & conditions', [
         validators.InputRequired()])
-    password2 = StringField('password2', [validators.equal_to("password")])
+    password2 = StringField('password2', [validators.EqualTo("password")])
 
 
 def validateUser(request):
     form = UserForm(request.form)
+    if (request.method == "POST" and form.validate()):
+        email = form.email.data
+        password = form.password.data
+        user = User.User(email, password)
+        return user
+    else:
+        return None
+
+
+def validateRegistration(request):
+    form = RegistrationForm(request.form)
     if (request.method == "POST" and form.validate()):
         email = form.email.data
         password = form.password.data

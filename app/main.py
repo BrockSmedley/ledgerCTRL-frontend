@@ -98,16 +98,17 @@ def logout():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if (request.method == "POST"):
-        user = forms.validateUser(request)
+        user = forms.validateRegistration(request)
         if (user):
             # form is valid; sign 'em up
             result = signup(user.email, user.password)
             if (result == "OK"):
+                login_user(user)
                 return redirect("/")
             else:
                 return result
         else:
-            return "Registration Failed"
+            return redirect('/register')
     else:
         return render_template("register.html", title="New Account", current_user=current_user)
 
