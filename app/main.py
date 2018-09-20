@@ -2,6 +2,7 @@ from flask import Flask, render_template, flash, request, redirect, url_for, abo
 from werkzeug.utils import secure_filename
 import requests
 import json
+import sys
 from cloudant.client import CouchDB
 from flask_login import LoginManager, login_user, logout_user, current_user, login_required
 
@@ -165,6 +166,12 @@ def signup(email, password):
 
     if (data['_id'] in usersdb):
         return "USER ALREADY EXISTS"
+
+    # get new itembase address from API
+    itembase = requests.post(
+        API_HOST+"/v2/itembase", json={"userId": "0xcb39f9322b21150833303453ec20aabef0817f90"})
+    addr = itembase.json()
+    data['itembase'] = addr
 
     # add user to DB
     doc = usersdb.create_document(data)
