@@ -21,13 +21,8 @@
       {% for i in items %}
       <li class="mdl-list__item">
         <span class="mdl-list__item-primary-content">
-          <i class="material-icons  mdl-list__item-avatar">person</i>
+          <i class="material-icons" style="margin-right: 12px;">cloud_done</i>
           <a href="{{API_HOST}}/v2/inventory/{{ i }}">{{ i }}</a>
-        </span>
-        <span class="mdl-list__item-secondary-action">
-          <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="list-checkbox-1">
-            <input type="checkbox" id="list-checkbox-1" class="mdl-checkbox__input" checked />
-          </label>
         </span>
       </li>
       {% endfor %}
@@ -39,7 +34,7 @@
     </div>
     <form method="POST" enctype="multipart/form-data" action="{{API_HOST}}/v2/inventory">
       <input type="file" id="upfile" name="upfile">
-      <input type="hidden" id="userId" name="userId" value="0x4d409AB08C5B631A84dB907E4a916a7ea1375898">
+      <input type="hidden" id="userId" name="userId" value="{{ itembase }}">
       <input type="hidden" id="inventoryItem" name="inventoryItem" value='{"name": "test"}'>
       
           <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" type="submit">

@@ -4,7 +4,7 @@ import requests
 import json
 import sys
 from cloudant.client import CouchDB
-from flask_login import LoginManager, login_user, logout_user, current_user, login_required
+from flask_login import LoginManager, login_user, logout_user, current_user, login_required, user_logged_in
 
 from util import security, forms
 from util import user as User
@@ -47,10 +47,19 @@ def main():
 # file storage page
 @app.route("/upload")
 def upload():
-    uid = "0x4d409AB08C5B631A84dB907E4a916a7ea1375898"
-    items = requests.get(API_HOST+"/v2/items/"+uid)
+    # if user is logged in, fetch their files
+    items = None
+    uid = ""
+    if (user_logged_in):
+        # get user's itembase address
+        print(current_user.email)
+        user = usersdb[current_user.email]
+        uid = user['itembase']
 
-    return render_template("upload.html", API_HOST=API_HOST, items=items.json(), title="Vault", current_user=current_user)
+        # get items from ETH
+        items = requests.get(API_HOST+"/v2/items/"+uid)
+
+    return render_template("upload.html", API_HOST=API_HOST, items=items.json(), title="Vault", current_user=current_user, itembase=uid)
 
 
 # user endpoint; POST creates new user, PUT updates password
