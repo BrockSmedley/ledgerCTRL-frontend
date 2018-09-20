@@ -28,6 +28,7 @@
       {% endfor %}
     </ul>
   </div>
+  {% if current_user.is_authenticated %}
   <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--4-col login-box">
     <div class="mdl-card__title">
       <h2 class="mdl-card__title-text">Upload File</h2>
@@ -43,6 +44,7 @@
         
     </form>
 </div>
+{% endif %}
 <script>
   function processURL() {
     var url = '{{API_HOST}}/v2/inventory/' + document.getElementById("id").value;

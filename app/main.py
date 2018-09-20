@@ -4,8 +4,7 @@ import requests
 import json
 import sys
 from cloudant.client import CouchDB
-from flask_login import LoginManager, login_user, logout_user, current_user, login_required, user_logged_in
-
+from flask_login import LoginManager, login_user, logout_user, current_user, login_required
 from util import security, forms
 from util import user as User
 
@@ -49,17 +48,24 @@ def main():
 def upload():
     # if user is logged in, fetch their files
     items = None
+    jitems = {}
     uid = ""
-    if (user_logged_in):
-        # get user's itembase address
-        print(current_user.email)
-        user = usersdb[current_user.email]
-        uid = user['itembase']
+    print(current_user, file=sys.stderr)
+    try:
+        if (current_user.email):
+            # get user's itembase address
+            print(current_user.email)
+            user = usersdb[current_user.email]
+            uid = user['itembase']
 
-        # get items from ETH
-        items = requests.get(API_HOST+"/v2/items/"+uid)
+            # get items from ETH
+            items = requests.get(API_HOST+"/v2/items/"+uid)
+            if (items.json()):
+                jitems = items.json()
+    except AttributeError:
+        print("Anonymous user detected.")
 
-    return render_template("upload.html", API_HOST=API_HOST, items=items.json(), title="Vault", current_user=current_user, itembase=uid)
+    return render_template("upload.html", API_HOST=API_HOST, items=jitems, title="Vault", current_user=current_user, itembase=uid)
 
 
 # user endpoint; POST creates new user, PUT updates password
