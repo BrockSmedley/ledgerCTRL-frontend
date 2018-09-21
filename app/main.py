@@ -151,7 +151,8 @@ def register():
 # inventory proxy
 @app.route("/inventory", methods=["POST"])
 def inventory():
-    return _proxy(request)
+    res = _proxy(request)
+    return redirect("/upload")
 
 
 # inventory item proxy
