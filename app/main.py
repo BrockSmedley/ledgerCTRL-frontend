@@ -1,4 +1,4 @@
-from flask import Flask, render_template, flash, request, redirect, url_for, abort, Response
+from flask import Flask, render_template, flash, request, redirect, url_for, abort, Response, send_file
 from werkzeug.utils import secure_filename
 import requests
 import json
@@ -84,7 +84,7 @@ def upload():
     except AttributeError:
         print("Anonymous user detected.")
 
-    return render_template("upload.html", API_HOST=API_HOST, items=jitems, title="Vault", current_user=current_user, itembase=uid)
+    return render_template("upload.html", items=jitems, title="Vault", current_user=current_user, itembase=uid)
 
 
 # user endpoint; POST creates new user, PUT updates password
@@ -157,6 +157,12 @@ def inventory():
 # inventory item proxy
 @app.route("/inventory/<item>")
 def inventoryItem(item):
+    return _proxy(request)
+
+
+# file proxy
+@app.route("/file/<hash>")
+def file(hash):
     return _proxy(request)
 
 
@@ -248,5 +254,4 @@ def allowed_file(filename):
 
 
 if __name__ == "__main__":
-    # Only for debugging while developing
     app.run(host='0.0.0.0', debug=True, port=80)

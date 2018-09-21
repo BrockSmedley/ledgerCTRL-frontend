@@ -10,19 +10,12 @@
     <div class="mdl-card__title">
       <h2 class="mdl-card__title-text">Your files</h2>
     </div>
-    <form onSubmit="return processURL();" method="GET">
-      <div class="mdl-textfield mdl-js-textfield">
-        <input class="mdl-textfield__input" type="text" id="id" name="id" placeholder="IPFS Hash">
-      </div>
-        <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" 
-          type="submit">Retrieve File</button>
-    </form>
     <ul class="demo-list-item mdl-list">
       {% for i in items %}
       <li class="mdl-list__item">
         <span class="mdl-list__item-primary-content">
           <i class="material-icons" style="margin-right: 12px;">cloud_done</i>
-          <a href="/inventory/{{ i }}">{{ i }}</a>
+          <a href="/file/{{ i }}">{{ i }}</a>
         </span>
       </li>
       {% endfor %}
@@ -38,10 +31,9 @@
       <input type="file" id="upfile" name="upfile">
       <input type="hidden" id="userId" name="userId" value="{{ itembase }}">
       <input type="hidden" id="inventoryItem" name="inventoryItem" value='{"name": "test"}'>
-      
-          <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" type="submit">
-            Upload
-          </button>
+      <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" type="submit">
+        Upload
+      </button>
     </form>
     {% else %}
     <div style="text-align: center">
@@ -51,7 +43,7 @@
 </div>
 <script>
   function processURL() {
-    var url = '/inventory/' + document.getElementById("id").value;
+    var url = '/file/' + document.getElementById("id").value;
     location.href = url;
     return false;
   }
