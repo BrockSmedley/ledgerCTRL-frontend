@@ -22,7 +22,7 @@
       <li class="mdl-list__item">
         <span class="mdl-list__item-primary-content">
           <i class="material-icons" style="margin-right: 12px;">cloud_done</i>
-          <a href="{{API_HOST}}/v2/inventory/{{ i }}">{{ i }}</a>
+          <a href="/inventory/{{ i }}">{{ i }}</a>
         </span>
       </li>
       {% endfor %}
@@ -33,7 +33,7 @@
     <div class="mdl-card__title">
       <h2 class="mdl-card__title-text">Upload File</h2>
     </div>
-    <form method="POST" enctype="multipart/form-data" action="{{API_HOST}}/v2/inventory">
+    <form method="POST" enctype="multipart/form-data" action="/inventory">
       <input type="file" id="upfile" name="upfile">
       <input type="hidden" id="userId" name="userId" value="{{ itembase }}">
       <input type="hidden" id="inventoryItem" name="inventoryItem" value='{"name": "test"}'>
@@ -41,13 +41,12 @@
           <button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" type="submit">
             Upload
           </button>
-        
     </form>
 </div>
 {% endif %}
 <script>
   function processURL() {
-    var url = '{{API_HOST}}/v2/inventory/' + document.getElementById("id").value;
+    var url = '/inventory/' + document.getElementById("id").value;
     location.href = url;
     return false;
   }

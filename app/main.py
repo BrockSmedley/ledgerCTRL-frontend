@@ -1,4 +1,4 @@
-from flask import Flask, render_template, flash, request, redirect, url_for, abort
+from flask import Flask, render_template, flash, request, redirect, url_for, abort, Response
 from werkzeug.utils import secure_filename
 import requests
 import json
@@ -25,7 +25,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SECRET_KEY'] = "Super Secret -- use DB or something"
 login_manager.init_app(app)
 
-API_HOST = "http://172.16.66.2:8088"
+API_HOST = "http://172.16.66.2:8088/v2"
 
 
 @login_manager.user_loader
@@ -35,6 +35,25 @@ def load_user(user_id):
 
     u = User.User(user_id, password)
     return u
+
+
+def _proxy(request, append=""):
+    resp = requests.request(
+        method=request.method,
+        url=request.url.replace('http://localhost', API_HOST + append),
+        headers={key: value for (key, value)
+                 in request.headers if key != 'Host'},
+        data=request.get_data(),
+        cookies=request.cookies,
+        allow_redirects=False)
+
+    excluded_headers = ['content-encoding',
+                        'content-length', 'transfer-encoding', 'connection']
+    headers = [(name, value) for (name, value) in resp.raw.headers.items()
+               if name.lower() not in excluded_headers]
+
+    response = Response(resp.content, resp.status_code, headers)
+    return response
 
 
 # homepage
@@ -59,7 +78,7 @@ def upload():
             uid = user['itembase']
 
             # get items from ETH
-            items = requests.get(API_HOST+"/v2/items/"+uid)
+            items = requests.get(API_HOST+"/items/"+uid)
             if (items.json()):
                 jitems = items.json()
     except AttributeError:
@@ -129,6 +148,18 @@ def register():
         return render_template("register.html", title="New Account", current_user=current_user)
 
 
+# inventory proxy
+@app.route("/inventory", methods=["POST"])
+def inventory():
+    return _proxy(request)
+
+
+# inventory item proxy
+@app.route("/inventory/<item>")
+def inventoryItem(item):
+    return _proxy(request)
+
+
 # helper function; account deletion
 def deleteUser():
     if (not request.json):
@@ -184,7 +215,7 @@ def signup(email, password):
 
     # get new itembase address from API
     itembase = requests.post(
-        API_HOST+"/v2/itembase", json={"userId": "0xcb39f9322b21150833303453ec20aabef0817f90"})
+        API_HOST+"/itembase", json={"userId": "0xcb39f9322b21150833303453ec20aabef0817f90"})
     addr = itembase.json()
     data['itembase'] = addr
 
