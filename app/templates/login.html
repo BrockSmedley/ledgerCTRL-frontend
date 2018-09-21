@@ -9,11 +9,11 @@
     <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--4-col login-box">
         <form method="POST" action="/login">
             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <input class="mdl-textfield__input" type="email" id="email" name="email">
+                <input class="mdl-textfield__input" type="email" id="email" name="email" required>
                 <label class="mdl-textfield__label" for="email">Email...</label>
             </div>
             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <input class="mdl-textfield__input" type="password" id="password" name="password">
+                <input class="mdl-textfield__input" type="password" id="password" name="password" required>
                 <label class="mdl-textfield__label" for="password">Password...</label>
             </div>
             <div class="mdl-layout-spacer" style="height: 60px;"></div>
@@ -22,6 +22,7 @@
                     name="submitRegister">
                     Log In
                 </button>
+                <a href="/register">Create an account</a>
             </div>
         </form>
     </div>
