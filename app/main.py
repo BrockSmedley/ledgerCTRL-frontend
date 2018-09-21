@@ -12,7 +12,7 @@ login_manager = LoginManager()
 
 COUCH_USER = "admin"
 COUCH_PASS = "Queef master 5000."
-COUCH_URL = "http://10.0.0.128:5984"
+COUCH_URL = "http://172.16.66.4:5984"
 
 client = CouchDB(COUCH_USER, COUCH_PASS, url=COUCH_URL, connect=True)
 usersdb = client['users']
@@ -25,7 +25,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SECRET_KEY'] = "Super Secret -- use DB or something"
 login_manager.init_app(app)
 
-API_HOST = "http://10.0.0.128:8088"
+API_HOST = "http://172.16.66.2:8088"
 
 
 @login_manager.user_loader
