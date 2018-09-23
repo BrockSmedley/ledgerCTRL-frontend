@@ -5,14 +5,35 @@
 
 {% block content %}
 
-<div class="mdl-grid demo-content bg-dark">
-    <div class="mdl-row">
-        <h2>{{ name }}</h2>
+<div class="mdl-grid demo-content mdl-color--white">
+    <div class="mdl-cell mdl-cell--8-col mdl-color--white-400 demo-charts">
+        <div class="mdl-layout-spacer"></div>
+        <h5>Item Preview...</h5>
+        <h6>{{ filehash }}</h6>
         <a href="/file/{{ itemhash }}">Download {{ filename }}</a>
     </div>
-    <div class="mdl-row">
-        <h6>{{ filehash }}</h6>
+    <div class="mdl-cell mdl-cell--4-col">
+        <h2>{{ name }}</h2>
+        <h5>Item information...</h5>
+        <p>Ut excepteur magna eu mollit. Veniam sint irure cillum mollit pariatur consectetur pariatur tempor esse. Irure pariatur incididunt officia est laborum.</p>
     </div>
+</div>
+<div class="actionbutton-container">
+    <a href="/file/{{ itemhash }}">
+        <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored button-space">
+            <i class="material-icons">cloud_download</i>
+        </button>
+    </a>
+    <a href="#">
+        <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-color--orange mdl-button--colored button-space" disabled>
+            <i class="material-icons">account_circle</i>
+        </button>
+    </a>
+    <a href="#">
+        <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-color--green-600 mdl-button--colored button-space" disabled>
+            <i class="material-icons">label</i>
+        </button>
+    </a>
 </div>
 
 {% endblock %}

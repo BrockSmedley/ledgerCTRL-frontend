@@ -111,6 +111,7 @@ html, body {
   -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
+  text-align: center;
 }
 .demo-chart:nth-child(1) {
   color: #ACEC00;
@@ -151,6 +152,7 @@ html, body {
   justify-content: center;
   overflow: hidden;
 }
+
 /* TODO: Find a proper solution to have the graphs
  * not float around outside their container in IE10/11.
  * Using a browserhacks.com solution for now.
@@ -245,6 +247,10 @@ _:-ms-input-placeholder, :root .demo-graph {
   height: 100%;
 }
 
+container {
+  margin: 16px;
+}
+
 .center-icon {
   width: 96px;
   height: 96px;
@@ -286,5 +292,16 @@ _:-ms-input-placeholder, :root .demo-graph {
 }
 
 .bg-dark {
-  color: #37474F;
+  background-color: #37474F;
+}
+
+.actionbutton-container {
+  display: flex;
+  flex-direction: row;
+  padding-top: 32px;
+  justify-content: center;
+}
+
+.button-space {
+  margin: 16px;
 }
