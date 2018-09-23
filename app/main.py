@@ -59,7 +59,7 @@ def _proxy(request, append=""):
 # homepage
 @app.route("/")
 def main():
-    return render_template("index.html", title="Dashboard", current_user=current_user)
+    return render_template("index.jinja", title="Dashboard", current_user=current_user)
 
 
 # file storage page
@@ -84,7 +84,7 @@ def upload():
 
     print(jitems)
 
-    return render_template("upload.html", items=jitems, title="Vault", current_user=current_user, itembase=uid)
+    return render_template("upload.jinja", items=jitems, title="Asset Vault", current_user=current_user, itembase=uid)
 
 
 # user endpoint; POST creates new user, PUT updates password
@@ -116,9 +116,9 @@ def login():
             if (not forms.is_safe_url(next)):
                 return abort(400)
             return redirect(next or '/')
-        return render_template('login.html', title="Log In")
+        return render_template('login.jinja', title="Log In")
     else:
-        return render_template('login.html', title="Log In")
+        return render_template('login.jinja', title="Log In")
 
 
 # logout endpoint
@@ -145,7 +145,7 @@ def register():
         else:
             return redirect('/register')
     else:
-        return render_template("register.html", title="New Account", current_user=current_user)
+        return render_template("register.jinja", title="New Account", current_user=current_user)
 
 
 # inventory proxy
@@ -172,10 +172,12 @@ def itempage(itemhash):
     fileItem = res['fileHash']
     name = res['name']
 
-    return render_template("item.html", name=name,
+    return render_template("item.jinja", name=name,
                            filename=fileItem['Name'],
                            filehash=fileItem['Hash'],
-                           itemhash=itemhash)
+                           itemhash=itemhash,
+                           title="Asset Manager",
+                           current_user=current_user)
 
 
 # file proxy
