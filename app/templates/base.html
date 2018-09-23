@@ -80,7 +80,7 @@
             <div class="demo-drawer mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50">
                 <header class="demo-drawer-header">
                     <div style="padding: 8px 16px; text-align:right;"><span>LedgerCTRL</span></div>
-                    <img src="images/{% if self._TemplateReference__context.name == 'upload.html' %}pipboy_smolg.png{% else %}user.jpg{% endif %}" class="demo-avatar">
+                    <img src="/images/{% if self._TemplateReference__context.name == 'upload.html' %}pipboy_smolg.png{% else %}user.jpg{% endif %}" class="demo-avatar">
                     <div class="demo-avatar-dropdown">
                         <span>
                             {% if current_user.is_authenticated %} {{ current_user.email }}

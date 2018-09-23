@@ -69,11 +69,9 @@ def upload():
     items = None
     jitems = {}
     uid = ""
-    print(current_user, file=sys.stderr)
     try:
         if (current_user.email):
             # get user's itembase address
-            print(current_user.email)
             user = usersdb[current_user.email]
             uid = user['itembase']
 
@@ -83,6 +81,8 @@ def upload():
                 jitems = items.json()
     except AttributeError:
         print("Anonymous user detected.")
+
+    print(jitems)
 
     return render_template("upload.html", items=jitems, title="Vault", current_user=current_user, itembase=uid)
 
@@ -156,9 +156,26 @@ def inventory():
 
 
 # inventory item proxy
-@app.route("/inventory/<item>")
+@app.route("/inventory/<item>", methods=["GET"])
 def inventoryItem(item):
     return _proxy(request)
+
+
+def getItem(itemhash):
+    res = requests.get(API_HOST+"/inventory/%s" % itemhash)
+    return res.json()
+
+
+@app.route("/item/<itemhash>", methods=["GET"])
+def itempage(itemhash):
+    res = getItem(itemhash)
+    fileItem = res['fileHash']
+    name = res['name']
+
+    return render_template("item.html", name=name,
+                           filename=fileItem['Name'],
+                           filehash=fileItem['Hash'],
+                           itemhash=itemhash)
 
 
 # file proxy

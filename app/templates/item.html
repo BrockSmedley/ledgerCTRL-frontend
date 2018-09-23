@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block header %}
+{% endblock %}
+
+{% block content %}
+
+<div class="mdl-grid demo-content bg-dark">
+    <div class="mdl-row">
+        <h2>{{ name }}</h2>
+        <h6>{{ filehash }}</h6>
+        <a href="/file/{{ itemhash }}">Download {{ filename }}</a>
+    </div>
+</div>
+
+{% endblock %}
