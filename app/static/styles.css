@@ -283,14 +283,6 @@ container {
   height: 100%;
 }
 
-.block {
-  display: block;
-  width: 100%;
-  border: none;
-  padding: 8px 16px;
-  text-align: center;
-}
-
 .bg-dark {
   background-color: #37474F;
 }
