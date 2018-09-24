@@ -204,7 +204,7 @@ def itempage(itemhash):
                                title="Asset Manager",
                                current_user=current_user)
     else:
-        return render_template("sowwy.jinja")
+        return render_template("sowwy.jinja", title="Rekt")
 
 
 # file proxy
