@@ -2,3 +2,5 @@ requests
 Cloudant
 WTForms
 flask-login
+pyqrcode
+pypng

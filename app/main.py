@@ -4,10 +4,12 @@ import requests
 import json
 import sys
 import os
+import pyqrcode
 from cloudant.client import CouchDB
 from flask_login import LoginManager, login_user, logout_user, current_user, login_required
 from util import security, forms
 from util import user as User
+
 
 login_manager = LoginManager()
 
@@ -19,14 +21,14 @@ client = CouchDB(COUCH_USER, COUCH_PASS, url=COUCH_URL, connect=True)
 usersdb = client['users']
 
 UPLOAD_FOLDER = '/tempfiles'
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 app = Flask(__name__, static_url_path="", static_folder="static")
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SECRET_KEY'] = "Super Secret -- use DB or something"
 login_manager.init_app(app)
 
-API_HOST = "http://172.16.66.2:8088/v2"
+API_HOST = "http://172.16.66.2:8088/v2/"
+LOCAL_HOST = "10.0.0.128:8099/"
 
 
 @login_manager.user_loader
@@ -46,7 +48,7 @@ def load_user(user_id):
 def _proxy(request, append=""):
     resp = requests.request(
         method=request.method,
-        url=request.url.replace('http://localhost', API_HOST + append),
+        url=request.url.replace('http://localhost/', API_HOST + append),
         headers={key: value for (key, value)
                  in request.headers if key != 'Host'},
         data=request.get_data(),
@@ -84,7 +86,7 @@ def upload():
             upass = user['eth_password']
 
             # get items from ETH
-            items = requests.get(API_HOST+"/items/"+uid)
+            items = requests.get(API_HOST+"items/"+uid)
             if (items.json()):
                 jitems = items.json()
     except AttributeError:
@@ -156,6 +158,17 @@ def register():
         return render_template("register.jinja", title="New Account", current_user=current_user)
 
 
+@app.route("/tag/<itemhash>", methods=["GET"])
+def getTag(itemhash):
+    fname = itemhash+'.png'
+    fstream = open(fname, "wb")
+    data = LOCAL_HOST + "item/" + itemhash
+    pyqrcode.create(data).png(fname, scale=5)
+    fstream.close()
+    fstream = open(fname, "rb")
+    return send_file(fstream, mimetype="image/png")
+
+
 # inventory proxy
 @app.route("/inventory", methods=["POST"])
 def inventory():
@@ -170,7 +183,7 @@ def inventoryItem(item):
 
 
 def getItem(itemhash):
-    res = requests.get(API_HOST+"/inventory/%s" % itemhash)
+    res = requests.get(API_HOST+"inventory/%s" % itemhash)
     return res.json()
 
 
@@ -264,7 +277,7 @@ def signup(email, password):
 
     # create new ETH account
     rdata = {"password": epass}
-    account = requests.post(API_HOST+"/ethUser", json=rdata)
+    account = requests.post(API_HOST+"ethUser", json=rdata)
     account = account.json()
 
     # add account index to DB datapage
@@ -294,11 +307,5 @@ def checkCredentials(email, password):
         return False
 
 
-# helper function
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', debug=True, port=80)
+    app.run(host='0.0.0.0', debug=False, port=80)

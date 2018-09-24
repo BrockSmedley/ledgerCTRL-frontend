@@ -4,4 +4,7 @@ ADD ./requirements.txt /app
 WORKDIR /app
 RUN pip install -r requirements.txt
 
+ENV LISTEN_PORT 80
+EXPOSE 80
+
 COPY ./app /app

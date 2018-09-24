@@ -38,24 +38,32 @@
         <div class="actionbutton-row bottom">
             <div class="actionbutton-container">
                 <a href="/file/{{ itemhash }}">
-                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored mdl-color--blue">
-                        <i class="material-icons">cloud_download</i>
+                    <button class="mdl-button mdl-js-button 
+                    mdl-button--fab mdl-button--mini-fab 
+                    mdl-button--colored mdl-color--blue">
+                        <i class="material-icons mdl-color-text--white">cloud_download</i>
                     </button>
                 </a>
                 <span>Download</span>
             </div>
             <div class="actionbutton-container">
                 <a href="#">
-                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored mdl-color--orange" disabled>
+                    <button class="mdl-button mdl-js-button 
+                    mdl-button--fab mdl-button--mini-fab 
+                    mdl-button--colored mdl-color--orange" 
+                    disabled>
                         <i class="material-icons">account_circle</i>
+                        <!--  mdl-color-text--white -->
                     </button>
                 </a>
                 <span>Transact</span>
             </div>
             <div class="actionbutton-container">
-                <a href="#">
-                    <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored mdl-color--green" disabled>
-                        <i class="material-icons">label</i>
+                <a href="/tag/{{ itemhash }}">
+                    <button class="mdl-button mdl-js-button 
+                    mdl-button--fab mdl-button--mini-fab 
+                    mdl-button--colored mdl-color--green">
+                        <i class="material-icons mdl-color-text--white">label</i>
                     </button>
                 </a>
                 <span>Smart Tag</span>
