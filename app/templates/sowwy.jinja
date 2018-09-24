@@ -1,0 +1,14 @@
+{% extends 'base.jinja' %}
+{% block title %}{{ title }}{% endblock %}
+{% block header %}
+{% endblock %}
+
+{% block content %}
+    <div class="login-box">
+        <h1>Oh snap!</h1>
+        <p>You do not have access to this item. Please log in to view it.</p>
+    </div>
+    <div class="login-box">
+        <a href="/login"><button class="mdl-button">Log In</button></a>
+    </div>
+{% endblock %}

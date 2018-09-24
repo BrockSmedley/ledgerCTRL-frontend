@@ -158,6 +158,7 @@ def register():
         return render_template("register.jinja", title="New Account", current_user=current_user)
 
 
+# create QR code from itemhash
 @app.route("/tag/<itemhash>", methods=["GET"])
 def getTag(itemhash):
     fname = itemhash+'.png'
@@ -171,6 +172,7 @@ def getTag(itemhash):
 
 # inventory proxy
 @app.route("/inventory", methods=["POST"])
+@login_required
 def inventory():
     res = _proxy(request)
     return redirect("/upload")
@@ -178,6 +180,7 @@ def inventory():
 
 # inventory item proxy
 @app.route("/inventory/<item>", methods=["GET"])
+@login_required
 def inventoryItem(item):
     return _proxy(request)
 
@@ -193,16 +196,20 @@ def itempage(itemhash):
     fileItem = res['fileHash']
     name = res['name']
 
-    return render_template("item.jinja", name=name,
-                           filename=fileItem['Name'],
-                           filehash=fileItem['Hash'],
-                           itemhash=itemhash,
-                           title="Asset Manager",
-                           current_user=current_user)
+    if current_user.email == res['owner']:
+        return render_template("item.jinja", name=name,
+                               filename=fileItem['Name'],
+                               filehash=fileItem['Hash'],
+                               itemhash=itemhash,
+                               title="Asset Manager",
+                               current_user=current_user)
+    else:
+        return render_template("sowwy.jinja")
 
 
 # file proxy
 @app.route("/file/<hash>")
+@login_required
 def file(hash):
     return _proxy(request)
 
