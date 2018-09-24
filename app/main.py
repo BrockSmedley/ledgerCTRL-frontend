@@ -163,7 +163,7 @@ def register():
 def getTag(itemhash):
     fname = itemhash+'.png'
     fstream = open(fname, "wb")
-    data = LOCAL_HOST + "item/" + itemhash
+    data = LOCAL_HOST + "scan/" + itemhash
     pyqrcode.create(data).png(fname, scale=5)
     fstream.close()
     fstream = open(fname, "rb")
@@ -214,7 +214,19 @@ def file(hash):
     return _proxy(request)
 
 
+# smart tag scan
+@app.route("/scan/<hash>")
+@login_required
+def scanTag(hash):
+    cdata = {"user": current_user.email}
+    jdata = {"itemId": str(hash), "scanData": json.dumps(cdata)}
+    tx = requests.post(API_HOST+"scan", json=jdata)
+    txid = tx.json()
+    return render_template("scan.jinja", txid=txid)
+
 # helper function; account deletion
+
+
 def deleteUser():
     if (not request.json):
         return "PLEASE PROVIDE JSON"
