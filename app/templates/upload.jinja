@@ -31,7 +31,7 @@
       <input type="file" id="upfile" name="upfile" required>
       <input type="hidden" id="userIndex" name="userIndex" value="{{ uid }}">
       <input type="hidden" id="userPass" name="userPass" value="{{ upass }}">
-      <input type="hidden" id="inventoryItem" name="inventoryItem" value='{"name": "test"}'>
+      <input type="hidden" id="inventoryItem" name="inventoryItem" value='{"name": "test", "owner": "{{ current_user.email }}" }'>
       <button class="mdl-button mdl-button--colored mdl-md block" type="submit">Upload</button>
     </form>
     {% else %}
