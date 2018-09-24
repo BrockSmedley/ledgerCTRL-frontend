@@ -287,13 +287,16 @@ container {
   background-color: #37474F;
 }
 
-.actionbutton-container {
+.actionbutton-row {
   display: flex;
   flex-direction: row;
   padding-top: 32px;
   justify-content: center;
 }
 
-.button-space {
+.actionbutton-container {
   margin: 16px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
 }

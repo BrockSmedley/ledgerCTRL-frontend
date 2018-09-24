@@ -37,22 +37,31 @@
         </ul>
     </div>
 </div>
-<div class="actionbutton-container">
-    <a href="/file/{{ itemhash }}">
-        <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored button-space">
-            <i class="material-icons">cloud_download</i>
-        </button>
-    </a>
-    <a href="#">
-        <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-color--orange mdl-button--colored button-space" disabled>
-            <i class="material-icons">account_circle</i>
-        </button>
-    </a>
-    <a href="#">
-        <button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-color--green-600 mdl-button--colored button-space" disabled>
-            <i class="material-icons">label</i>
-        </button>
-    </a>
+<div class="actionbutton-row">
+    <div class="actionbutton-container">
+        <a href="/file/{{ itemhash }}">
+            <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored mdl-color--blue">
+                <i class="material-icons">cloud_download</i>
+            </button>
+        </a>
+        <span>Download</span>
+    </div>
+    <div class="actionbutton-container">
+        <a href="#">
+            <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored mdl-color--orange" disabled>
+                <i class="material-icons">account_circle</i>
+            </button>
+        </a>
+        <span>Transact</span>
+    </div>
+    <div class="actionbutton-container">
+        <a href="#">
+            <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored mdl-color--green" disabled>
+                <i class="material-icons">label</i>
+            </button>
+        </a>
+        <span>Smart Tag</span>
+    </div>
 </div>
 
 {% endblock %}
