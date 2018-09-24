@@ -29,7 +29,8 @@
     {% if current_user.is_authenticated %}
     <form method="POST" enctype="multipart/form-data" action="/inventory">
       <input type="file" id="upfile" name="upfile" required>
-      <input type="hidden" id="userId" name="userId" value="{{ itembase }}">
+      <input type="hidden" id="userIndex" name="userIndex" value="{{ uid }}">
+      <input type="hidden" id="userPass" name="userPass" value="{{ upass }}">
       <input type="hidden" id="inventoryItem" name="inventoryItem" value='{"name": "test"}'>
       <button class="mdl-button mdl-button--colored mdl-md block" type="submit">Upload</button>
     </form>

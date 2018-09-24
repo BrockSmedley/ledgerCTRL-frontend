@@ -3,6 +3,7 @@ from werkzeug.utils import secure_filename
 import requests
 import json
 import sys
+import os
 from cloudant.client import CouchDB
 from flask_login import LoginManager, login_user, logout_user, current_user, login_required
 from util import security, forms
@@ -30,11 +31,16 @@ API_HOST = "http://172.16.66.2:8088/v2"
 
 @login_manager.user_loader
 def load_user(user_id):
-    user = usersdb[user_id]
-    password = user['password']
+    try:
+        user = usersdb[user_id]
+        password = user['password']
 
-    u = User.User(user_id, password)
-    return u
+        u = User.User(user_id, password)
+        return u
+    except KeyError as e:
+        print(e)
+        print("Could not find user.")
+        return None
 
 
 def _proxy(request, append=""):
@@ -69,11 +75,13 @@ def upload():
     items = None
     jitems = {}
     uid = ""
+    upass = ""
     try:
         if (current_user.email):
-            # get user's itembase address
+            # get user index
             user = usersdb[current_user.email]
-            uid = user['itembase']
+            uid = str(user['eth_index'])
+            upass = user['eth_password']
 
             # get items from ETH
             items = requests.get(API_HOST+"/items/"+uid)
@@ -84,7 +92,7 @@ def upload():
 
     print(jitems)
 
-    return render_template("upload.jinja", items=jitems, title="Asset Vault", current_user=current_user, itembase=uid)
+    return render_template("upload.jinja", items=jitems, title="Asset Vault", current_user=current_user, uid=uid, upass=upass)
 
 
 # user endpoint; POST creates new user, PUT updates password
@@ -231,19 +239,38 @@ def signupJSON():
     return signup(email, password)
 
 
+def randomPass():
+    pbytes = os.urandom(48)
+    o = []
+    for b in pbytes:
+        r = b % 64
+        o.append(r)
+    return("".join(map(chr, pbytes)))
+
+
 # helper function; sign up new user with form
 def signup(email, password):
     # package data into dict
     data = {'_id': email, 'password': password}
 
+    print("USER INFO: %s" % str(data))
+
     if (data['_id'] in usersdb):
         return "USER ALREADY EXISTS"
 
-    # get new itembase address from API
-    itembase = requests.post(
-        API_HOST+"/itembase", json={"userId": "0xcb39f9322b21150833303453ec20aabef0817f90"})
-    addr = itembase.json()
-    data['itembase'] = addr
+    # generate random password for ETH account
+    #epass = randomPass()
+    epass = "TODO: FIX RANDOM PASS GENERATOR"
+
+    # create new ETH account
+    rdata = {"password": epass}
+    account = requests.post(API_HOST+"/ethUser", json=rdata)
+    account = account.json()
+
+    # add account index to DB datapage
+    data['eth_index'] = account['index']
+    data['eth_password'] = epass
+    print(data)
 
     # add user to DB
     doc = usersdb.create_document(data)
