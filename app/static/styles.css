@@ -290,8 +290,7 @@ container {
 .actionbutton-row {
   display: flex;
   flex-direction: row;
-  padding-top: 32px;
-  justify-content: center;
+  
 }
 
 .actionbutton-container {
@@ -299,4 +298,10 @@ container {
   display: flex;
   flex-direction: column;
   text-align: center;
+}
+
+.bottom {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
