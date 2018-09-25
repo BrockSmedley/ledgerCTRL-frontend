@@ -194,9 +194,9 @@ def getItem(itemhash):
 def itempage(itemhash):
     res = getItem(itemhash)
     fileItem = res['fileHash']
-    name = res['name']
+    name = res['inventoryItem']['name']
 
-    if current_user.email == res['owner']:
+    if current_user.email == res['inventoryItem']['owner']:
         return render_template("item.jinja", name=name,
                                filename=fileItem['Name'],
                                filehash=fileItem['Hash'],
