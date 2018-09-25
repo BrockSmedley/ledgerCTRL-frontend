@@ -1,5 +1,5 @@
 {% extends 'base.jinja' %}
-{% block title %}{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 {% block header %}
 {% endblock %}
 
@@ -50,8 +50,7 @@
                     <button class="mdl-button mdl-js-button 
                     mdl-button--fab mdl-button--mini-fab 
                     mdl-button--colored mdl-color--orange">
-                        <i class="material-icons">account_circle</i>
-                        <!--  mdl-color-text--white -->
+                        <i class="material-icons mdl-color-text--white">account_circle</i>
                     </button>
                 </a>
                 <span>Transact</span>

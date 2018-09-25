@@ -4,12 +4,20 @@
 {% endblock %}
 
 {% block content %}
-    <div class="demo-content">
+    <div class="demo-content login-box">
         <form action="/transfer", method="post">
             <input type="hidden" id="itemhash" name="itemhash" value="{{itemhash}}">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email">
-            <button type="submit">Send it</button>
+            <label for="email">Send to...</label>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="email" id="email" name="email" required>
+                <label class="mdl-textfield__label" for="email">Email...</label>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: flex-end">
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" type="submit" id="submitLogin"
+                    name="submitRegister">
+                    Send it
+                </button>
+            </div>
         </form>
     </div>
 {% endblock %}

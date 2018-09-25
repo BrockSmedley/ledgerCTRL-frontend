@@ -222,7 +222,7 @@ def scanTag(hash):
         jdata = {"itemId": str(hash), "scanData": json.dumps(cdata)}
         tx = requests.post(API_HOST+"scan", json=jdata)
         txid = tx.json()
-        return render_template("scan.jinja", txid=txid)
+        return render_template("scan.jinja", title="scan", txid=txid)
     else:
         return render_template("sowwy.jinja", title="Sup anon")
 
