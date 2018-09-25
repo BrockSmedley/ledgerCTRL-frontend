@@ -231,7 +231,8 @@ def scanTag(hash):
 @app.route("/transfer/<itemhash>", methods=["GET"])
 @login_required
 def transfer(itemhash):
-    return render_template("transfer.jinja", title="Transfer Item", itemhash=itemhash, current_user=current_user)
+    item = getItem(itemhash)
+    return render_template("transfer.jinja", title="Transfer Item", itemhash=itemhash, item=item, current_user=current_user)
 
 
 @app.route("/transfer", methods=["POST"])
