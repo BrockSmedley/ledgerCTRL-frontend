@@ -1,0 +1,15 @@
+{% extends 'base.jinja' %}
+{% block title %}{{ title }}{% endblock %}
+{% block header %}
+{% endblock %}
+
+{% block content %}
+    <div class="demo-content">
+        <form action="/transfer", method="post">
+            <input type="hidden" id="itemhash" name="itemhash" value="{{itemhash}}">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email">
+            <button type="submit">Send it</button>
+        </form>
+    </div>
+{% endblock %}

@@ -197,11 +197,11 @@ def itempage(itemhash):
     name = res['inventoryItem']['name']
 
     if current_user.email == res['inventoryItem']['owner']:
-        return render_template("item.jinja", name=name,
+        return render_template("item.jinja",
                                filename=fileItem['Name'],
                                filehash=fileItem['Hash'],
                                itemhash=itemhash,
-                               title="Asset Manager",
+                               title=name,
                                current_user=current_user)
     else:
         return render_template("sowwy.jinja", title="Rekt")
@@ -226,9 +226,40 @@ def scanTag(hash):
     else:
         return render_template("sowwy.jinja", title="Sup anon")
 
+
+# transfer page
+@app.route("/transfer/<itemhash>", methods=["GET"])
+@login_required
+def transfer(itemhash):
+    return render_template("transfer.jinja", title="Transfer Item", itemhash=itemhash, current_user=current_user)
+
+
+@app.route("/transfer", methods=["POST"])
+@login_required
+def transfer_item():
+    data = request.form
+    itemhash = data['itemhash']
+    newOwnerEmail = data['email']
+
+    user = usersdb[current_user.email]
+    newOwner = usersdb[newOwnerEmail]
+
+    jdata = {
+        "userIndex": int(user['eth_index']),
+        "userPass": user['eth_password'],
+        "itemhash": itemhash,
+        "newOwnerIndex": int(newOwner['eth_index']),
+        "newOwner": newOwnerEmail
+    }
+
+    res = requests.post(API_HOST+"transfer", json=jdata)
+
+    txhash = (res.text).replace('"', '')
+
+    return render_template("success.jinja", newOwner=newOwnerEmail, txHash=txhash)
+
+
 # helper function; account deletion
-
-
 def deleteUser():
     if (not request.json):
         return "PLEASE PROVIDE JSON"

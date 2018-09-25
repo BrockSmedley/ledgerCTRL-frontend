@@ -1,5 +1,5 @@
 {% extends 'base.jinja' %}
-{% block title %}{{ title }}{% endblock %}
+{% block title %}{% endblock %}
 {% block header %}
 {% endblock %}
 
@@ -13,7 +13,6 @@
         <a href="/file/{{ itemhash }}">Download {{ filename }}</a>
     </div>
     <div class="mdl-cell mdl-cell--4-col">
-        <h2>{{ name }}</h2>
         <h5>Item information...</h5>
         <ul class="demo-list-icon mdl-list">
             <li class="mdl-list__item">
@@ -47,11 +46,10 @@
                 <span>Download</span>
             </div>
             <div class="actionbutton-container">
-                <a href="#">
+                <a href="/transfer/{{ itemhash }}">
                     <button class="mdl-button mdl-js-button 
                     mdl-button--fab mdl-button--mini-fab 
-                    mdl-button--colored mdl-color--orange" 
-                    disabled>
+                    mdl-button--colored mdl-color--orange">
                         <i class="material-icons">account_circle</i>
                         <!--  mdl-color-text--white -->
                     </button>

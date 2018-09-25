@@ -1,0 +1,12 @@
+{% extends 'base.jinja' %}
+{% block title %}{{ title }}{% endblock %}
+{% block header %}
+{% endblock %}
+
+{% block content %}
+    <div class="login-box">
+        <h1>Poof!</h1>
+        <p>Your item has been transferred to <strong>{{ newOwner }}.</strong></p>
+        <span>Transaction hash: <a href="https://ropsten.etherscan.io/tx/{{ txHash }}">{{ txHash }}</a></span>
+    </div>
+{% endblock %}
