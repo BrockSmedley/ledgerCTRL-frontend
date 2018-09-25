@@ -216,13 +216,15 @@ def file(hash):
 
 # smart tag scan
 @app.route("/scan/<hash>")
-@login_required
 def scanTag(hash):
-    cdata = {"user": current_user.email}
-    jdata = {"itemId": str(hash), "scanData": json.dumps(cdata)}
-    tx = requests.post(API_HOST+"scan", json=jdata)
-    txid = tx.json()
-    return render_template("scan.jinja", txid=txid)
+    if (hasattr(current_user, "email")):
+        cdata = {"user": current_user.email}
+        jdata = {"itemId": str(hash), "scanData": json.dumps(cdata)}
+        tx = requests.post(API_HOST+"scan", json=jdata)
+        txid = tx.json()
+        return render_template("scan.jinja", txid=txid)
+    else:
+        return render_template("sowwy.jinja", title="Sup anon")
 
 # helper function; account deletion
 
