@@ -197,11 +197,15 @@ def itempage(itemhash):
     name = res['inventoryItem']['name']
 
     if current_user.email == res['inventoryItem']['owner']:
+        scansReq = requests.get(API_HOST+"scans/"+itemhash)
+        scans = scansReq.json()
+
         return render_template("item.jinja",
                                filename=fileItem['Name'],
                                filehash=fileItem['Hash'],
                                itemhash=itemhash,
                                title=name,
+                               scans=scans,
                                current_user=current_user)
     else:
         return render_template("sowwy.jinja", title="Rekt")
