@@ -6,7 +6,7 @@
 {% block content %}
 
 <div class="mdl-grid demo-content mdl-color--white">
-    <div class="mdl-cell mdl-cell--8-col mdl-color--white-400 demo-charts">
+    <div class="mdl-cell mdl-cell--6-col mdl-color--white-400 demo-charts">
         <div class="mdl-layout-spacer"></div>
         <h5>Item Preview...</h5>
         <h6>{{ filehash }}</h6>
@@ -44,7 +44,7 @@
             </div>
         </div>
     </div>
-    <div class="mdl-cell mdl-cell--4-col">
+    <div class="mdl-cell mdl-cell--6-col">
         <h5>Scans</h5>
         {% if scans %}
             <ul class="demo-list-icon mdl-list">
@@ -67,10 +67,12 @@
                 <li class="mdl-list__item">
                     <span class="mdl-list__item-primary-content">
                         <i class="material-icons mdl-list__item-icon">check_circle_outline</i>
-                        <div><strong>From:</strong> {{ t['from'] }}</div>
                     </span>
-                    <span class="mdl-list__item-primary-content"><strong>To:</strong> {{ t['to'] }}</span>
-                    <span class="mdl-list__item-primary-content"><strong>Block number:</strong> {{ t['block'] }}</span>
+                    <div>
+                        <div><strong>From:</strong> {{ t['from'] }}</div>
+                        <div><strong>To:</strong> {{ t['to'] }}</div>
+                        <div><strong>Block number:</strong> {{ t['block'] }}</div>
+                    </div>
                 </li>
             {% endfor %}
         </ul>
