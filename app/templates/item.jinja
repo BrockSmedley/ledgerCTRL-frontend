@@ -28,6 +28,23 @@
         {% else %}
             <div>This item has never been scanned.</div>
         {% endif %}
+        <h5>Owner History</h5>
+        {% if transfers %}
+        <ul class="demo-list-icon mdl-list">
+            {% for t in transfers %}
+                <li class="mdl-list__item lefty">
+                    <span class="mdl-list__item-primary-content">
+                        <i class="material-icons mdl-list__item-icon">check_circle_outline</i>
+                        <div><strong>From:</strong> {{ t['from'] }}</div>
+                    </span>
+                    <span class="mdl-list__item-primary-content"><strong>To:</strong> {{ t['to'] }}</span>
+                    <span class="mdl-list__item-primary-content"><strong>Block number:</strong> {{ t['block'] }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <div>This item has never been transferred.</div>
+        {% endif %}
         
         <div class="actionbutton-row bottom">
             <div class="actionbutton-container">

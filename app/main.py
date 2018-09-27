@@ -200,12 +200,16 @@ def itempage(itemhash):
         scansReq = requests.get(API_HOST+"scans/"+itemhash)
         scans = scansReq.json()
 
+        txReq = requests.get(API_HOST + "transfers/" + itemhash)
+        transfers = txReq.json()
+
         return render_template("item.jinja",
                                filename=fileItem['Name'],
                                filehash=fileItem['Hash'],
                                itemhash=itemhash,
                                title=name,
                                scans=scans,
+                               transfers=transfers,
                                current_user=current_user)
     else:
         return render_template("sowwy.jinja", title="Rekt")

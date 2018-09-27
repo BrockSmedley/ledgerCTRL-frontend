@@ -305,3 +305,9 @@ container {
   bottom: 0;
   width: 100%;
 }
+
+.lefty {
+  display: flex; 
+  flex-direction: column; 
+  align-items: left;
+}
