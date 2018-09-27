@@ -290,7 +290,7 @@ container {
 .actionbutton-row {
   display: flex;
   flex-direction: row;
-  
+  justify-content: center;
 }
 
 .actionbutton-container {
