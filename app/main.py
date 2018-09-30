@@ -5,8 +5,10 @@ import json
 import sys
 import os
 import pyqrcode
+import datetime
 from cloudant.client import CouchDB
 from flask_login import LoginManager, login_user, logout_user, current_user, login_required
+from flask_uploads import *
 from util import security, forms
 from util import user as User
 
@@ -22,13 +24,14 @@ usersdb = client['users']
 
 UPLOAD_FOLDER = '/tempfiles'
 
+API_HOST = "http://172.16.66.2:8088/v2/"
+LOCAL_HOST = "10.0.0.128:8099/"
+
 app = Flask(__name__, static_url_path="", static_folder="static")
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SECRET_KEY'] = "Super Secret -- use DB or something"
+patch_request_class(app, 128*1024*1024)  # max file size: 128 MB
 login_manager.init_app(app)
-
-API_HOST = "http://172.16.66.2:8088/v2/"
-LOCAL_HOST = "10.0.0.128:8099/"
 
 
 @login_manager.user_loader
@@ -174,7 +177,27 @@ def getTag(itemhash):
 @app.route("/inventory", methods=["POST"])
 @login_required
 def inventory():
-    res = _proxy(request)
+    # TODO: un-proxy request; save file locally & send via requests.post()
+    fileup = request.files['upfile']
+    item = request.form['inventoryItem']
+    userIndex = request.form['userIndex']
+
+    # generate secure filename for upfile
+    sfn = secure_filename(fileup.filename)
+    # save file locally
+    fileup.save(sfn)
+
+    # pack up request data to forward to API_HOST
+    jdata = {'inventoryItem': item, 'userIndex': userIndex}
+    f_u = {'upfile': open(sfn, 'rb')}
+
+    # send request to API_HOST
+    res = requests.post(API_HOST + "inventory",
+                        files=f_u, data=jdata)
+
+    # return error code or refresh on success
+    if (res.status_code != 200):
+        return res.text
     return redirect("/upload")
 
 
@@ -226,7 +249,10 @@ def file(hash):
 @app.route("/scan/<hash>")
 def scanTag(hash):
     if (hasattr(current_user, "email")):
-        cdata = {"user": current_user.email}
+        cdata = {
+            "user": current_user.email,
+            "date": str(datetime.datetime.now())
+        }
         jdata = {"itemId": str(hash), "scanData": json.dumps(cdata)}
         tx = requests.post(API_HOST+"scan", json=jdata)
         txid = tx.json()
