@@ -9,5 +9,19 @@
             <p>This scan has been logged to the blockchain.</p>
             <p>Transaction ID: <a href="#">{{ txid }}</a></p>
         </div>
+        <div class="login-box">
+            <div class="actionbutton-row">
+                <div class="actionbutton-container">
+                    <a href="/item/{{ itemhash }}">
+                        <button class="mdl-button mdl-js-button 
+                        mdl-button--fab mdl-button--mini-fab 
+                        mdl-button--colored mdl-color--blue">
+                            <i class="material-icons mdl-color-text--white">visibility</i>
+                        </button>
+                    </a>
+                    <span>View Item</span>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
