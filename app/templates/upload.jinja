@@ -29,6 +29,10 @@
     {% if current_user.is_authenticated %}
     <form method="POST" enctype="multipart/form-data" action="/inventory">
       <input type="file" id="upfile" name="upfile" required>
+      <div>
+        <input type="checkbox" id="public" name="public" value="public">
+        <label for="public">Public</label>
+      </div>
       <input type="hidden" id="userIndex" name="userIndex" value="{{ uid }}">
       <input type="hidden" id="userPass" name="userPass" value="{{ upass }}">
       <input type="hidden" id="inventoryItem" name="inventoryItem" value='{"name": "test", "owner": "{{ current_user.email }}" }'>

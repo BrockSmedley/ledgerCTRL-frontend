@@ -184,6 +184,11 @@ def inventory():
     fileup = request.files['upfile']
     item = request.form['inventoryItem']
     userIndex = request.form['userIndex']
+    public = request.form['public']
+    if (public == 'public'):
+        public = True
+    else:
+        public = False
 
     # generate secure filename for upfile
     sfn = secure_filename(fileup.filename)
@@ -191,7 +196,7 @@ def inventory():
     fileup.save(sfn)
 
     # pack up request data to forward to API_HOST
-    jdata = {'inventoryItem': item, 'userIndex': userIndex}
+    jdata = {'inventoryItem': item, 'userIndex': userIndex, 'public': public}
     f_u = {'upfile': open(sfn, 'rb')}
 
     # send request to API_HOST
@@ -216,29 +221,39 @@ def getItem(itemhash):
     return res.json()
 
 
+def itempageTemplate(itemhash, fileItem, name, owner=None):
+    scansReq = requests.get(API_HOST+"scans/"+itemhash)
+    scans = scansReq.json()
+
+    txReq = requests.get(API_HOST + "transfers/" + itemhash)
+    transfers = txReq.json()
+
+    return render_template("item.jinja",
+                           filename=fileItem['Name'],
+                           filehash=fileItem['Hash'],
+                           itemhash=itemhash,
+                           title=name,
+                           scans=scans,
+                           transfers=transfers,
+                           current_user=current_user,
+                           owner=owner)
+
+
 @app.route("/item/<itemhash>", methods=["GET"])
 def itempage(itemhash):
     res = getItem(itemhash)
     fileItem = res['fileHash']
     name = res['inventoryItem']['name']
+    public = res['public']
+    owner = res['inventoryItem']['owner']
 
-    if current_user.email == res['inventoryItem']['owner']:
-        scansReq = requests.get(API_HOST+"scans/"+itemhash)
-        scans = scansReq.json()
-
-        txReq = requests.get(API_HOST + "transfers/" + itemhash)
-        transfers = txReq.json()
-
-        return render_template("item.jinja",
-                               filename=fileItem['Name'],
-                               filehash=fileItem['Hash'],
-                               itemhash=itemhash,
-                               title=name,
-                               scans=scans,
-                               transfers=transfers,
-                               current_user=current_user)
+    if (not public):
+        if hasattr(current_user, "email") and current_user.email == owner:
+            return itempageTemplate(itemhash, fileItem, name, owner)
+        else:
+            return render_template("sowwy.jinja", title="Rekt")
     else:
-        return render_template("sowwy.jinja", title="Rekt")
+        return itempageTemplate(itemhash, fileItem, name, owner)
 
 
 # file proxy

@@ -22,6 +22,7 @@
                 </a>
                 <span>Download</span>
             </div>
+            {% if current_user.email == owner %}
             <div class="actionbutton-container">
                 <a href="/transfer/{{ itemhash }}">
                     <button class="mdl-button mdl-js-button 
@@ -32,6 +33,7 @@
                 </a>
                 <span>Transact</span>
             </div>
+            {% endif %}
             <div class="actionbutton-container">
                 <a href="/tag/{{ itemhash }}">
                     <button class="mdl-button mdl-js-button 
