@@ -8,7 +8,7 @@
 <div class="mdl-grid demo-content mdl-color--white">
     <div class="mdl-cell mdl-cell--6-col mdl-color--white-400 demo-charts">
         <div class="mdl-layout-spacer"></div>
-        <h5>Item Preview...</h5>
+        <h5><i class="material-icons" style="margin-right: 12px;">{% if public %}visibility{%else%}visibility_off{%endif%}</i> {{ filename }}</h5>
         <h6>{{ filehash }}</h6>
         
         <div class="actionbutton-row">

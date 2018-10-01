@@ -228,7 +228,7 @@ def getItem(itemhash):
     return res.json()
 
 
-def itempageTemplate(itemhash, fileItem, name, owner=None):
+def itempageTemplate(itemhash, fileItem, name, owner=None, public=False):
     scansReq = requests.get(API_HOST+"scans/"+itemhash)
     scans = scansReq.json()
 
@@ -243,7 +243,8 @@ def itempageTemplate(itemhash, fileItem, name, owner=None):
                            scans=scans,
                            transfers=transfers,
                            current_user=current_user,
-                           owner=owner)
+                           owner=owner,
+                           public=public)
 
 
 @app.route("/item/<itemhash>", methods=["GET"])
@@ -256,11 +257,11 @@ def itempage(itemhash):
 
     if (not public):
         if hasattr(current_user, "email") and current_user.email == owner:
-            return itempageTemplate(itemhash, fileItem, name, owner)
+            return itempageTemplate(itemhash, fileItem, name, owner, public=public)
         else:
             return render_template("sowwy.jinja", title="Rekt", message="You do not have access to this item. Please log in to view it.", login_required=True)
     else:
-        return itempageTemplate(itemhash, fileItem, name, owner)
+        return itempageTemplate(itemhash, fileItem, name, owner, public=public)
 
 
 # file proxy
