@@ -298,7 +298,7 @@ def scanTag(hash):
         txid = tx.json()
         return render_template("scan.jinja", title="scan", txid=txid)
     else:
-        return render_template("sowwy.jinja", title="Sup anon")
+        return render_template("sowwy.jinja", title="Sup anon", message="You must be logged in to scan this item.", login_required=True)
 
 
 # transfer page
