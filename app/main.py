@@ -25,7 +25,7 @@ usersdb = client['users']
 UPLOAD_FOLDER = '/tempfiles'
 
 API_HOST = "http://172.16.66.2:8088/v2/"
-LOCAL_HOST = "10.0.0.128:8099/"
+LOCAL_HOST = "ctrl.vaasd.com:8099/"
 
 app = Flask(__name__, static_url_path="", static_folder="static")
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -166,6 +166,7 @@ def register():
 def getTag(itemhash):
     fname = itemhash+'.png'
     fstream = open(fname, "wb")
+    # URL to use in the QR code
     data = LOCAL_HOST + "scan/" + itemhash
     pyqrcode.create(data).png(fname, scale=5)
     fstream.close()
