@@ -14,7 +14,7 @@
       {% for i in items %}
       <li class="mdl-list__item">
         <span class="mdl-list__item-primary-content">
-          <i class="material-icons" style="margin-right: 12px;">cloud_download</i>
+          <i class="material-icons" style="margin-right: 12px;">{% if i['public'] %}visibility{%else%}visibility_off{%endif%}</i>
           <a href="/item/{{ i['itemhash'] }}">{{ i['filename'] }}</a>
         </span>
       </li>

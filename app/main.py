@@ -94,6 +94,14 @@ def upload():
             items = requests.get(API_HOST+"items/"+uid)
             if (items.json()):
                 jitems = items.json()
+
+            for i in jitems:
+                res = requests.get(API_HOST+"inventory/%s" % i['itemhash'])
+                item = res.json()
+                print(item)
+                public = item['public']
+                i['public'] = public
+
     except AttributeError:
         print("Anonymous user detected.")
 
@@ -256,6 +264,7 @@ def itempage(itemhash):
 
 
 # file proxy
+# DON'T USE @login_required -- items can be public
 @app.route("/file/<hash>")
 def file(hash):
     # get filename from API
@@ -286,6 +295,7 @@ def file(hash):
 
 
 # smart tag scan
+# DON'T USE @login_required -- we still need to render a page for anons
 @app.route("/scan/<hash>")
 def scanTag(hash):
     if (hasattr(current_user, "email")):
@@ -296,7 +306,7 @@ def scanTag(hash):
         jdata = {"itemId": str(hash), "scanData": json.dumps(cdata)}
         tx = requests.post(API_HOST+"scan", json=jdata)
         txid = tx.json()
-        return render_template("scan.jinja", title="scan", txid=txid)
+        return render_template("scan.jinja", title="scan", txid=txid, itemhash=str(hash))
     else:
         return render_template("sowwy.jinja", title="Sup anon", message="You must be logged in to scan this item.", login_required=True)
 
