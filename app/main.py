@@ -184,11 +184,10 @@ def inventory():
     fileup = request.files['upfile']
     item = request.form['inventoryItem']
     userIndex = request.form['userIndex']
-    public = request.form['public']
-    if (public == 'public'):
-        public = True
+    if 'public' in request.form:
+        public = 'True'
     else:
-        public = False
+        public = 'False'
 
     # generate secure filename for upfile
     sfn = secure_filename(fileup.filename)
@@ -258,14 +257,20 @@ def itempage(itemhash):
 
 # file proxy
 @app.route("/file/<hash>")
-@login_required
 def file(hash):
     # get filename from API
     url = API_HOST + "inventory/%s" % hash
     res = requests.get(url)
     jdata = res.json()
     filename = jdata['fileHash']['Name']
+    public = jdata['public']
+    owner = jdata['inventoryItem']['owner']
     print(filename)
+
+    # prevent downloads from unauthorized parties
+    if (not public):
+        if (not hasattr(current_user, "email") or current_user.email != owner):
+            return "UNAUTHORIZED"
 
     # get raw file from API
     url = API_HOST + "file/%s" % hash
