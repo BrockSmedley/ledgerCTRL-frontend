@@ -205,7 +205,7 @@ def inventory():
 @app.route("/inventory/<item>", methods=["GET"])
 @login_required
 def inventoryItem(item):
-    return _proxy(request)
+    return getItem(item)
 
 
 def getItem(itemhash):
@@ -242,6 +242,7 @@ def itempage(itemhash):
 @app.route("/file/<hash>")
 @login_required
 def file(hash):
+    #res = requests.get(API_HOST + "file/%s" % hash)
     return _proxy(request)
 
 
