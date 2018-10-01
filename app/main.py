@@ -250,7 +250,7 @@ def itempage(itemhash):
         if hasattr(current_user, "email") and current_user.email == owner:
             return itempageTemplate(itemhash, fileItem, name, owner)
         else:
-            return render_template("sowwy.jinja", title="Rekt")
+            return render_template("sowwy.jinja", title="Rekt", message="You do not have access to this item. Please log in to view it.", login_required=True)
     else:
         return itempageTemplate(itemhash, fileItem, name, owner)
 
@@ -316,22 +316,25 @@ def transfer_item():
     itemhash = data['itemhash']
     newOwnerEmail = data['email']
 
-    user = usersdb[current_user.email]
-    newOwner = usersdb[newOwnerEmail]
+    try:
+        user = usersdb[current_user.email]
+        newOwner = usersdb[newOwnerEmail]
 
-    jdata = {
-        "userIndex": int(user['eth_index']),
-        "userPass": user['eth_password'],
-        "itemhash": itemhash,
-        "newOwnerIndex": int(newOwner['eth_index']),
-        "newOwner": newOwnerEmail
-    }
+        jdata = {
+            "userIndex": int(user['eth_index']),
+            "userPass": user['eth_password'],
+            "itemhash": itemhash,
+            "newOwnerIndex": int(newOwner['eth_index']),
+            "newOwner": newOwnerEmail
+        }
 
-    res = requests.post(API_HOST+"transfer", json=jdata)
+        res = requests.post(API_HOST+"transfer", json=jdata)
 
-    txhash = (res.text).replace('"', '')
+        txhash = (res.text).replace('"', '')
 
-    return render_template("success.jinja", newOwner=newOwnerEmail, txHash=txhash)
+        return render_template("success.jinja", newOwner=newOwnerEmail, txHash=txhash)
+    except KeyError:
+        return render_template("sowwy.jinja", title="Dun goofed ¯\_(ツ)_/¯", message="We couldn't find an account for that email address.")
 
 
 # helper function; account deletion
