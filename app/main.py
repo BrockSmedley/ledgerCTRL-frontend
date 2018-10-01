@@ -1,11 +1,13 @@
 from flask import Flask, render_template, flash, request, redirect, url_for, abort, Response, send_file
 from werkzeug.utils import secure_filename
+from werkzeug.wsgi import wrap_file
 import requests
 import json
 import sys
 import os
 import pyqrcode
 import datetime
+import shutil
 from cloudant.client import CouchDB
 from flask_login import LoginManager, login_user, logout_user, current_user, login_required
 from flask_uploads import *
@@ -25,7 +27,7 @@ usersdb = client['users']
 UPLOAD_FOLDER = '/tempfiles'
 
 API_HOST = "http://172.16.66.2:8088/v2/"
-LOCAL_HOST = "ctrl.vaasd.com:8099/"
+LOCAL_HOST = "ctrl.vaasd.com/"
 
 app = Flask(__name__, static_url_path="", static_folder="static")
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -243,8 +245,24 @@ def itempage(itemhash):
 @app.route("/file/<hash>")
 @login_required
 def file(hash):
-    #res = requests.get(API_HOST + "file/%s" % hash)
-    return _proxy(request)
+    # get filename from API
+    url = API_HOST + "inventory/%s" % hash
+    res = requests.get(url)
+    jdata = res.json()
+    filename = jdata['fileHash']['Name']
+    print(filename)
+
+    # get raw file from API
+    url = API_HOST + "file/%s" % hash
+    res = requests.get(url, stream=True)
+
+    # read out file to local tempfile
+    with open('temp', 'wb') as out_file:
+        shutil.copyfileobj(res.raw, out_file)
+    del res
+
+    # send it
+    return send_file('temp', as_attachment=True, attachment_filename=filename)
 
 
 # smart tag scan
@@ -361,7 +379,7 @@ def signup(email, password):
         return "USER ALREADY EXISTS"
 
     # generate random password for ETH account
-    #epass = randomPass()
+    # epass = randomPass()
     epass = "TODO: FIX RANDOM PASS GENERATOR"
 
     # create new ETH account
