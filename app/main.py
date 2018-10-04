@@ -10,7 +10,8 @@ import datetime
 import shutil
 from cloudant.client import CouchDB
 from flask_login import LoginManager, login_user, logout_user, current_user, login_required
-from flask_uploads import *
+from flask_uploads import patch_request_class
+from flask_mail import Message, Mail
 from util import security, forms
 from util import user as User
 
@@ -30,8 +31,17 @@ API_HOST = "http://172.16.66.2:8088/v2/"
 LOCAL_HOST = "ctrl.vaasd.com/"
 
 app = Flask(__name__, static_url_path="", static_folder="static")
+mail = Mail(app)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SECRET_KEY'] = "Super Secret -- use DB or something"
+
+app.config['MAIL_SERVER'] = '10.0.0.129'
+#app.config['MAIL_USERNAME'] = 'winston'
+#app.config['MAIL_PASSWORD'] = 'smoke'
+app.config['MAIL_DEFAULT_SENDER'] = 'winston@jeeves'
+
+mail.init_app(app)
+
 patch_request_class(app, 128*1024*1024)  # max file size: 128 MB
 login_manager.init_app(app)
 
@@ -316,8 +326,17 @@ def scanTag(hash):
 
     jdata['scanData'] = json.dumps(sdata)
 
+    # send scan request to API
     tx = requests.post(API_HOST+"scan", json=jdata)
     txid = tx.json()
+
+    # send notice to owner
+    recipient = "test@10.0.0.129"
+    msg = Message("Item scanned", recipients=[recipient])
+    msg.body = "Item %s has been scanned by %s (%s)" % (
+        hash, sdata['user'], ip)
+    mail.send(msg)
+
     return render_template("scan.jinja", title="scan", txid=txid, itemhash=str(hash))
 
 
