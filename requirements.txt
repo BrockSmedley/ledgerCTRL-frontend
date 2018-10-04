@@ -3,5 +3,6 @@ Cloudant
 WTForms
 flask-login
 Flask-Uploads
+Flask-Mail
 pyqrcode
 pypng

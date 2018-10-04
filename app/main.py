@@ -299,17 +299,26 @@ def file(hash):
 # DON'T USE @login_required -- we still need to render a page for anons
 @app.route("/scan/<hash>")
 def scanTag(hash):
-    if (hasattr(current_user, "email")):
-        cdata = {
-            "user": current_user.email,
-            "date": str(datetime.datetime.now())
-        }
-        jdata = {"itemId": str(hash), "scanData": json.dumps(cdata)}
-        tx = requests.post(API_HOST+"scan", json=jdata)
-        txid = tx.json()
-        return render_template("scan.jinja", title="scan", txid=txid, itemhash=str(hash))
+    if request.environ.get('HTTP_X_FORWARDED_FOR') is None:
+        ip = (request.environ['REMOTE_ADDR'])
+        print("BOOOO")
     else:
-        return render_template("sowwy.jinja", title="Sup anon", message="You must be logged in to scan this item.", login_required=True)
+        ip = (request.environ['HTTP_X_FORWARDED_FOR'])  # if behind a proxy
+
+    jdata = {'itemId': str(hash)}
+    sdata = {'date': str(datetime.datetime.now()),
+             'ip': ip}
+
+    if (hasattr(current_user, "email")):
+        sdata['user'] = current_user.email
+    else:
+        sdata['user'] = "anonymous @ " + ip
+
+    jdata['scanData'] = json.dumps(sdata)
+
+    tx = requests.post(API_HOST+"scan", json=jdata)
+    txid = tx.json()
+    return render_template("scan.jinja", title="scan", txid=txid, itemhash=str(hash))
 
 
 # transfer page
