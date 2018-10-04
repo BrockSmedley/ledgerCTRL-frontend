@@ -13,4 +13,9 @@
         <a href="/login"><button class="mdl-button">Log In</button></a>
     </div>
     {% endif %}
+    {% if invite %}
+    <div class="login-box">
+        <a href="/invite?email={{ invite }}"><button class="mdl-button">Invite {{ invite }}</button></a>
+    </div>
+    {% endif %}
 {% endblock %}

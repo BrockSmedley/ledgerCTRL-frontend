@@ -371,9 +371,22 @@ def transfer_item():
 
         txhash = (res.text).replace('"', '')
 
-        return render_template("success.jinja", newOwner=newOwnerEmail, txHash=txhash)
+        return render_template("tx-success.jinja", newOwner=newOwnerEmail, txHash=txhash)
     except KeyError:
-        return render_template("sowwy.jinja", title="Dun goofed ¯\_(ツ)_/¯", message="We couldn't find an account for that email address.")
+        return render_template("sowwy.jinja", title="New Friend Alert", message="We couldn't find an account with that email address.", invite=newOwnerEmail)
+
+
+@app.route("/invite", methods=["GET"])
+@login_required
+def send_invite():
+    nEmail = request.args.get('email', default="none")
+    if (nEmail != "none"):
+        msg = Message("LedgerCTRL Invite", recipients=[nEmail])
+        msg.html = "%s has invited you to view an item on the blockchain. Sign up on <a href='http://ctrl.vaasd.com/register'>LedgerCTRL</a> to access it!" % current_user.email
+        mail.send(msg)
+        return render_template("notice.jinja", heading="Invite sent!", message="We just invited %s to LedgerCTRL -- hope they bring beer." % nEmail, info="Wine is also good.")
+    else:
+        return render_template("sowwy.jinja", title="Dun goofed ¯\\_(ツ)_/¯", message="You need to provide an email to invite in the URL parameters.")
 
 
 # helper function; account deletion
