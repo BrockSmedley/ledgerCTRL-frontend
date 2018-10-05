@@ -1,0 +1,14 @@
+{% extends 'base.jinja' %}
+{% block title %}{{ title }}{% endblock %}
+{% block header %}
+{% endblock %}
+
+{% block content %}
+    <div class="mld-grid" style="display: flex; align-items: center; justify-content: center; flex-direction: column;">
+        <div class="mdl-layout-spacer" style="height: 200px;"></div>
+        <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--4-col login-box">
+            <p>Click the secret link in your confirmation email to log in!</p>
+            <a href="#"><span>No show? Send it again.</span></a>
+        </div>
+    </div>
+{% endblock %}
