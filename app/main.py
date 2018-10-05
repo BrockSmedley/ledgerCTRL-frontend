@@ -133,7 +133,7 @@ def login():
         if (user and checkCredentials(user.email, user.password)):
             # catch inactive users
             if (not isUserActive(user.email)):
-                return render_template("confirm.jinja", email=user.email)
+                return render_template("confirm.jinja", title="Needs more confirm", email=user.email)
 
             login_user(user)
 
@@ -184,7 +184,7 @@ def confirmEmail():
     # get email from code
     email = getEmailFromCode(code)
 
-    if ('confirmation_key' in usersdb[email]):
+    if (isUserActive(email)):
         return redirect("/login?email=%s" % email)
 
     # generate random password for ETH account
@@ -500,7 +500,7 @@ def signup(email, password):
         <a href="%s">%s</a>""" % (url, url)
     mail.send(msg)
 
-    return render_template("confirm.jinja", title="Needs More Confirm", email=email)
+    return render_template("confirm.jinja", title="Needs Confirmation", email=email)
 
 
 def isUserActive(email):
