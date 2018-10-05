@@ -11,30 +11,23 @@
     <!-- Add to homescreen for Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
 
-    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.png') }}">
-
     <!-- Add to homescreen for Safari on iOS -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Material Design Lite">
-    <link rel="apple-touch-icon" sizes="57x57" href="/images/apple-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="/images/apple-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="/images/apple-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="/images/apple-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="/images/apple-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="/images/apple-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="/images/apple-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="192x192"  href="/images/android-icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/ctrl_logo_icon.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/ctrl_logo_icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/ctrl_logo_icon.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/ctrl_logo_icon.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/ctrl_logo_icon.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/ctrl_logo_icon.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/ctrl_logo_icon.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/ctrl_logo_icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/ctrl_logo_icon.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/images/ctrl_logo_icon.png">
+    <link rel="favicon" type="image/ico" href="/images/ctrl_logo_var_icon.ico">
     <link rel="manifest" href="/images/manifest.json">
-    <!-- Tile icon for Win8 (144x144 + tile color) -->
-    <meta name="msapplication-TileColor" content="#3372DF">
-    <meta name="msapplication-TileImage" content="/images/ms-icon-144x144.png">
-    <meta name="theme-color" content="#ffffff">
+    
 
 
 
@@ -93,7 +86,8 @@
             </header>
             <div class="demo-drawer mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50">
                 <header class="demo-drawer-header">
-                    <div style="text-align:right;"><img src="/images/logo.png" style="width: 154px;"></div>
+                    <a href="/"><div style="text-align:right;"><img src="/images/ctrl_logo_icon.png" style="width: 32px;"></div></a>
+
                     <img src="/images/{% if self._TemplateReference__context.name == 'upload.jinja' %}pipboy_smolg.png{% else %}user.jpg{% endif %}" class="demo-avatar">
                     <div class="demo-avatar-dropdown">
                         <span>
@@ -135,7 +129,7 @@
                         Asset Vault</a>
                     <div class="mdl-layout-spacer"></div>
                     <a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">help_outline</i><span
-                            class="visuallyhidden">Help</span></a>
+                            class="visuallyhidden">Help</span>LedgerCTRL</a>
                 </nav>
             </div>
         <header>
