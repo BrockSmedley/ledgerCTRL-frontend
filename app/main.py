@@ -33,9 +33,9 @@ LOCAL_HOST = "ctrl.vaasd.com/"
 app = Flask(__name__, static_url_path="", static_folder="static")
 mail = Mail(app)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['SECRET_KEY'] = "Super Secret -- use DB or something"
+app.config['SECRET_KEY'] = "Super Secret -- use local file"
 
-app.config['MAIL_SERVER'] = '10.0.0.129'
+app.config['MAIL_SERVER'] = '172.16.66.7'
 #app.config['MAIL_USERNAME'] = 'winston'
 #app.config['MAIL_PASSWORD'] = 'smoke'
 app.config['MAIL_DEFAULT_SENDER'] = 'winston@jeeves'
@@ -384,7 +384,7 @@ def send_invite():
         msg = Message("LedgerCTRL Invite", recipients=[nEmail])
         msg.html = "%s has invited you to view an item on the blockchain. Sign up on <a href='http://ctrl.vaasd.com/register'>LedgerCTRL</a> to access it!" % current_user.email
         mail.send(msg)
-        return render_template("notice.jinja", heading="Invite sent!", message="We just invited %s to LedgerCTRL -- hope they bring beer." % nEmail, info="Wine is also good.")
+        return render_template("notice.jinja", title="Invite sent", heading="Invitation sent!", message="We just invited %s to LedgerCTRL -- hope they bring beer." % nEmail, info="Wine is also good.")
     else:
         return render_template("sowwy.jinja", title="Dun goofed ¯\\_(ツ)_/¯", message="You need to provide an email to invite in the URL parameters.")
 
