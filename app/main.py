@@ -8,6 +8,7 @@ import os
 import pyqrcode
 import datetime
 import shutil
+import secrets
 from cloudant.client import CouchDB
 from flask_login import LoginManager, login_user, logout_user, current_user, login_required
 from flask_uploads import patch_request_class
@@ -24,16 +25,17 @@ COUCH_URL = "http://172.16.66.4:5984"
 
 client = CouchDB(COUCH_USER, COUCH_PASS, url=COUCH_URL, connect=True)
 usersdb = client['users']
+codesdb = client['codes']
 
 UPLOAD_FOLDER = '/tempfiles'
 
 API_HOST = "http://172.16.66.2:8088/v2/"
-LOCAL_HOST = "ctrl.vaasd.com/"
+LOCAL_HOST = "10.0.0.129/"
 
 app = Flask(__name__, static_url_path="", static_folder="static")
 mail = Mail(app)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['SECRET_KEY'] = "Super Secret -- use local file"
+app.config['SECRET_KEY'] = "Super Secret -- TODO: use local file"
 
 app.config['MAIL_SERVER'] = '172.16.66.7'
 #app.config['MAIL_USERNAME'] = 'winston'
@@ -129,6 +131,10 @@ def login():
 
         # confirmed good login syntax
         if (user and checkCredentials(user.email, user.password)):
+            # catch inactive users
+            if (not isUserActive(user.email)):
+                return render_template("confirm.jinja", email=user.email)
+
             login_user(user)
 
             next = request.args.get('next')
@@ -137,7 +143,10 @@ def login():
             return redirect(next or '/')
         return render_template('login.jinja', title="Log In")
     else:
-        return render_template('login.jinja', title="Log In")
+        email = request.args.get("email")
+        if (not email):
+            email = ""
+        return render_template('login.jinja', title="Log In", email=email)
 
 
 # logout endpoint
@@ -155,16 +164,49 @@ def register():
         user = forms.validateRegistration(request)
         if (user):
             # form is valid; sign 'em up
-            result = signup(user.email, user.password)
-            if (result == "OK"):
-                login_user(user)
-                return redirect("/")
-            else:
-                return result
+            return signup(user.email, user.password)
         else:
             return redirect('/register')
     else:
         return render_template("register.jinja", title="New Account", current_user=current_user)
+
+
+def getEmailFromCode(code):
+    return codesdb[code]['email']
+
+
+@app.route("/confirm", methods=["GET"])
+def confirmEmail():
+    code = request.args.get("code")
+    if (not code):
+        abort(Response("Confirmation code in URL required."))
+
+    # get email from code
+    email = getEmailFromCode(code)
+
+    if ('confirmation_key' in usersdb[email]):
+        return redirect("/login?email=%s" % email)
+
+    # generate random password for ETH account
+    # epass = randomPass()
+    epass = "TODO: FIX RANDOM PASS GENERATOR"
+
+    # create new ETH account
+    rdata = {"password": epass}
+    account = requests.post(
+        API_HOST+"ethUser", json=rdata, headers=api_headers)
+    account = account.json()
+
+    # add account index to DB datapage
+    userDoc = usersdb[email]
+    userDoc['eth_index'] = account['index']
+    userDoc['eth_password'] = epass
+    userDoc['confirmation_code'] = code
+
+    udb_res = userDoc.save()
+    print(udb_res)
+
+    return redirect("/login?email=%s" % email)
 
 
 # create QR code from itemhash
@@ -435,33 +477,38 @@ def signup(email, password):
     # package data into dict
     data = {'_id': email, 'password': password}
 
-    print("USER INFO: %s" % str(data))
-
     if (data['_id'] in usersdb):
         return "USER ALREADY EXISTS"
 
-    # generate random password for ETH account
-    # epass = randomPass()
-    epass = "TODO: FIX RANDOM PASS GENERATOR"
+    # generate confirmation code
+    code = secrets.token_urlsafe()
+    secretdata = {'_id': code, 'email': email}
 
-    # create new ETH account
-    rdata = {"password": epass}
-    account = requests.post(
-        API_HOST+"ethUser", json=rdata, headers=api_headers)
-    account = account.json()
+    # save confirmation/email pair to codes DB
+    sdoc = codesdb.create_document(secretdata)
+    print(sdoc)
 
-    # add account index to DB datapage
-    data['eth_index'] = account['index']
-    data['eth_password'] = epass
-    print(data)
-
-    # add user to DB
+    # (preemptively) add user to users DB
     doc = usersdb.create_document(data)
+    print(doc)
 
-    if (doc.exists()):
-        return "OK"
+    msg = Message("LedgerCTRL Account Confirmation", recipients=[email])
+    # TODO: change to https
+    url = 'http://%sconfirm?code=%s' % (LOCAL_HOST, code)
+    msg.html = """<h2>Confirm your email address</h2>
+        <p>Click the following link to confirm your email:</p>
+        <a href="%s">%s</a>""" % (url, url)
+    mail.send(msg)
+
+    return render_template("confirm.jinja", title="Needs More Confirm", email=email)
+
+
+def isUserActive(email):
+    user = usersdb[email]
+    if ('confirmation_code' in user):
+        return user['confirmation_code']
     else:
-        return "DB ERROR"
+        return None
 
 
 # helper function; authenticate with DB
