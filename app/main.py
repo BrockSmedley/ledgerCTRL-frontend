@@ -30,7 +30,17 @@ codesdb = client['codes']
 UPLOAD_FOLDER = '/tempfiles'
 
 API_HOST = "http://172.16.66.2:8088/v2/"
-LOCAL_HOST = "10.0.0.129/"
+
+# read environment file for local host
+# format:
+#   <hostname>/
+try:
+    lcf = open("/app/environment.txt", "r")
+except FileNotFoundError:
+    print("CONFIG ERROR: You must configure environment.txt in ./app/")
+    exit(2)
+LOCAL_HOST = lcf.read()
+lcf.close()
 
 app = Flask(__name__, static_url_path="", static_folder="static")
 mail = Mail(app)
