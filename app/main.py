@@ -35,12 +35,12 @@ API_HOST = "http://172.16.66.2:8088/v2/"
 # format:
 #   <hostname>/
 try:
-    lcf = open("/app/environment.txt", "r")
+    fp = open("/app/environment.txt", "r")
 except FileNotFoundError:
     print("CONFIG ERROR: You must configure environment.txt in ./app/")
     exit(2)
-LOCAL_HOST = lcf.read()
-lcf.close()
+LOCAL_HOST = fp.read()
+fp.close()
 
 app = Flask(__name__, static_url_path="", static_folder="static")
 mail = Mail(app)
@@ -57,9 +57,12 @@ mail.init_app(app)
 patch_request_class(app, 128*1024*1024)  # max file size: 128 MB
 login_manager.init_app(app)
 
-# TODO: Store in local file
-api_headers = {'appId': "PBYIA5-2U0gvCvMTKXqC2Jb8Nzs9KhBZNkw6WcLLkYo",
-               'key': "iXMKG8VvpdkpSKn1ezkJWYpNbb5tPVRS2z5nUFYtdGTP5sREmONVF_fColzk40JeKSZeG5T-s7c_ElYgXsHnag"}
+try:
+    fp = open('/app/apikey.json', 'r')
+    api_headers = json.loads(fp.read())
+except FileNotFoundError:
+    print("CONFIG ERROR: You must configure apikey.json in ./app")
+    exit(3)
 
 
 @login_manager.user_loader

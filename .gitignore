@@ -22,3 +22,4 @@ htmlcov/
 .coverage.*
 *,cover
 
+app/apikey.json
