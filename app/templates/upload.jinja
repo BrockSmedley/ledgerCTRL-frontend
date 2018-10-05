@@ -27,7 +27,7 @@
   
   <div class="mdl-color--white mdl-shadow--2dp mdl-cell mdl-cell--4-col login-box">
     <div class="mdl-card__title">
-      <h2 class="mdl-card__title-text">Upload Asset File</h2>
+      <h2 class="mdl-card__title-text">Upload Asset</h2>
     </div>
     {% if current_user.is_authenticated %}
     <form method="POST" enctype="multipart/form-data" action="/inventory">
@@ -35,13 +35,16 @@
         <input type="file" id="upfile" name="upfile" class="mdl-textfield__input" required>
       </div>
 
-      <div class="mdl-textfield mdl-js-textfield">
-        <input class="mdl-textfield__input" type="text" id="user" pattern="[A-Z,a-z, ]*">
-        <label class="mdl-textfield__label" for="user">Asset name (optional)</label>
-        <span class="mdl-textfield__error">Letters and spaces only</span>
+      <div class="mdl-layout-spacer" style="height: 20px;"></div>
+
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+        <input class="mdl-textfield__input" type="text" id="name" pattern="[A-Z,a-z, ,0-9,\-,_]+">
+        <label class="mdl-textfield__label" for="name">Asset name (optional)</label>
+        <span class="mdl-textfield__error">Alphanumeric & -_ only.</span>
       </div>
       
       <div class="mdl-layout-spacer" style="height: 20px;"></div>
+
       <div style="display: flex; width: 100%; flex-direction: row;">
         <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="public">
           <input type="checkbox" id="public" value="public" name="public" class="mdl-checkbox__input">
