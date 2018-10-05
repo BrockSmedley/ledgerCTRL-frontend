@@ -45,6 +45,10 @@ mail.init_app(app)
 patch_request_class(app, 128*1024*1024)  # max file size: 128 MB
 login_manager.init_app(app)
 
+# TODO: Store in local file
+api_headers = {'appId': "PBYIA5-2U0gvCvMTKXqC2Jb8Nzs9KhBZNkw6WcLLkYo",
+               'key': "iXMKG8VvpdkpSKn1ezkJWYpNbb5tPVRS2z5nUFYtdGTP5sREmONVF_fColzk40JeKSZeG5T-s7c_ElYgXsHnag"}
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -58,25 +62,6 @@ def load_user(user_id):
         print(e)
         print("Could not find user.")
         return None
-
-
-def _proxy(request, append=""):
-    resp = requests.request(
-        method=request.method,
-        url=request.url.replace('http://localhost/', API_HOST + append),
-        headers={key: value for (key, value)
-                 in request.headers if key != 'Host'},
-        data=request.get_data(),
-        cookies=request.cookies,
-        allow_redirects=False)
-
-    excluded_headers = ['content-encoding',
-                        'content-length', 'transfer-encoding', 'connection']
-    headers = [(name, value) for (name, value) in resp.raw.headers.items()
-               if name.lower() not in excluded_headers]
-
-    response = Response(resp.content, resp.status_code, headers)
-    return response
 
 
 # homepage
@@ -101,12 +86,13 @@ def upload():
             upass = user['eth_password']
 
             # get items from ETH
-            items = requests.get(API_HOST+"items/"+uid)
+            items = requests.get(API_HOST+"items/"+uid, headers=api_headers)
             if (items.json()):
                 jitems = items.json()
 
             for i in jitems:
-                res = requests.get(API_HOST+"inventory/%s" % i['itemhash'])
+                res = requests.get(API_HOST+"inventory/%s" %
+                                   i['itemhash'], headers=api_headers)
                 item = res.json()
                 print(item)
                 public = item['public']
@@ -198,7 +184,6 @@ def getTag(itemhash):
 @app.route("/inventory", methods=["POST"])
 @login_required
 def inventory():
-    # TODO: un-proxy request; save file locally & send via requests.post()
     fileup = request.files['upfile']
     item = request.form['inventoryItem']
     userIndex = request.form['userIndex']
@@ -218,7 +203,7 @@ def inventory():
 
     # send request to API_HOST
     res = requests.post(API_HOST + "inventory",
-                        files=f_u, data=jdata)
+                        files=f_u, data=jdata, headers=api_headers)
 
     # return error code or refresh on success
     if (res.status_code != 200):
@@ -234,15 +219,16 @@ def inventoryItem(item):
 
 
 def getItem(itemhash):
-    res = requests.get(API_HOST+"inventory/%s" % itemhash)
+    res = requests.get(API_HOST+"inventory/%s" % itemhash, headers=api_headers)
     return res.json()
 
 
 def itempageTemplate(itemhash, fileItem, name, owner=None, public=False):
-    scansReq = requests.get(API_HOST+"scans/"+itemhash)
+    scansReq = requests.get(API_HOST+"scans/"+itemhash, headers=api_headers)
     scans = scansReq.json()
 
-    txReq = requests.get(API_HOST + "transfers/" + itemhash)
+    txReq = requests.get(API_HOST + "transfers/" +
+                         itemhash, headers=api_headers)
     transfers = txReq.json()
 
     return render_template("item.jinja",
@@ -280,7 +266,7 @@ def itempage(itemhash):
 def file(hash):
     # get filename from API
     url = API_HOST + "inventory/%s" % hash
-    res = requests.get(url)
+    res = requests.get(url, headers=api_headers)
     jdata = res.json()
     filename = jdata['fileHash']['Name']
     public = jdata['public']
@@ -294,7 +280,7 @@ def file(hash):
 
     # get raw file from API
     url = API_HOST + "file/%s" % hash
-    res = requests.get(url, stream=True)
+    res = requests.get(url, stream=True, headers=api_headers)
 
     # read out file to local tempfile
     with open('temp', 'wb') as out_file:
@@ -327,7 +313,7 @@ def scanTag(hash):
     jdata['scanData'] = json.dumps(sdata)
 
     # send scan request to API
-    tx = requests.post(API_HOST+"scan", json=jdata)
+    tx = requests.post(API_HOST+"scan", json=jdata, headers=api_headers)
     txid = tx.json()
 
     # send notice to owner
@@ -367,7 +353,8 @@ def transfer_item():
             "newOwner": newOwnerEmail
         }
 
-        res = requests.post(API_HOST+"transfer", json=jdata)
+        res = requests.post(API_HOST+"transfer",
+                            json=jdata, headers=api_headers)
 
         txhash = (res.text).replace('"', '')
 
@@ -459,7 +446,8 @@ def signup(email, password):
 
     # create new ETH account
     rdata = {"password": epass}
-    account = requests.post(API_HOST+"ethUser", json=rdata)
+    account = requests.post(
+        API_HOST+"ethUser", json=rdata, headers=api_headers)
     account = account.json()
 
     # add account index to DB datapage
